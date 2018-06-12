@@ -1,3 +1,7 @@
+/*
+Q-URL: https://www.codewars.com/kata/counting-duplicates/cpp
+*/
+
 size_t duplicateCount(const std::string& in); // helper for tests
 
 inline char cast(char in)
