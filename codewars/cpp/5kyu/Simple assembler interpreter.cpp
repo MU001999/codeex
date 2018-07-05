@@ -1,3 +1,7 @@
+/*
+Q-URL: http://www.codewars.com/kata/simple-assembler-interpreter/cpp
+*/
+
 #include <cctype>
 #include <string>
 #include <sstream>
