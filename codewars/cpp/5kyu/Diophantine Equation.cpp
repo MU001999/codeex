@@ -11,10 +11,12 @@ Hint: Pell Equation
 class Dioph
 {
     public:
-    static std::vector<std::pair<long, long>> solEquaStr(long long n){
+    static std::vector<std::pair<long, long>> solEquaStr(long long n)
+    {
         std::vector<std::pair<long,long>> ans;
         long long b;
-        for (long long a = 1; a * a <= n; ++a){
+        for (long long a = 1; a * a <= n; ++a)
+        {
             if (n % a) continue;
             b = n/a;
             if ((b - a) % 4) continue;
