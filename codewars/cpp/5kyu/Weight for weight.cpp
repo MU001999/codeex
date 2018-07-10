@@ -1,3 +1,7 @@
+/*
+Q-URL: https://www.codewars.com/kata/weight-for-weight/cpp
+*/
+
 #include <vector>
 #include <map>
 #include <cstdlib>
