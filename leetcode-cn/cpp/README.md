@@ -7,3 +7,4 @@
 * [Valid Palindrome](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Palindrome.cpp)
 * [Count and Say](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Count%20and%20Say.cpp)
 * [Delete Node in a Linked List](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Delete%20Node%20in%20a%20Linked%20List.cpp)
+* [Remove Nth Node From End of List](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Remove%20Nth%20Node%20From%20End%20of%20List.cpp)
