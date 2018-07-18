@@ -5,3 +5,4 @@
 * [Two Sum](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Two%20Sum.cpp)
 * [Valid Anagram](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Anagram.cpp)
 * [Valid Palindrome](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Palindrome.cpp)
+* [Count and Say](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Count%20and%20Say.cpp)
