@@ -17,3 +17,4 @@
 
 ### TREE
 * [Maximum Depth of Binary Tree](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Maximum%20Depth%20of%20Binary%20Tree.cpp)
+* [Validate Binary Search Tree](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Validate%20Binary%20Search%20Tree.cpp)
