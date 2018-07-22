@@ -32,3 +32,4 @@
 
 ### MATH
 * [Fizz Buzz](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fizz%20Buzz)
+* [Power of Three](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Power%20of%20Three.cpp)
