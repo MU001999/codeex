@@ -29,3 +29,6 @@
 * [Climbing Stairs](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Climbing%20Stairs.cpp)
 * [Best Time to Buy and Sell Stock](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Best%20Time%20to%20Buy%20and%20Sell%20Stock.cpp)
 * [House Robber](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/House%20Robber.cpp)
+
+### MATH
+* [Fizz Buzz](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fizz%20Buzz)
