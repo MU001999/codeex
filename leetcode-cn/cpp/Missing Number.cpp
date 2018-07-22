@@ -1,0 +1,13 @@
+/*
+Q-URL: https://leetcode-cn.com/problems/missing-number/description/
+# BEATS 96.94%
+*/
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int n = nums.size(), sum = 0;
+        for (int &num : nums) sum += num;
+        return n * (n + 1) / 2 - sum;
+    }
+};
