@@ -33,3 +33,6 @@
 ### MATH
 * [Fizz Buzz](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fizz%20Buzz)
 * [Power of Three](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Power%20of%20Three.cpp)
+
+### OTHER
+* [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
