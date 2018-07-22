@@ -24,3 +24,6 @@
 ### SORT & SEARCH
 * [Merge Sorted Array](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Merge%20Sorted%20Array.cpp)
 * [First Bad Version](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/First%20Bad%20Version.cpp)
+
+### DYNAMIC PROGRAMMING
+* [Climbing Stairs](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Climbing%20Stairs.cpp)
