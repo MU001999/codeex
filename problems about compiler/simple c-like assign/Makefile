@@ -1,7 +1,7 @@
 DIR_INC = ./include
 DIR_SRC = ./src
 DIR_OBJ = ./obj
-DIR_BIN = ./bin
+DIR_BIN = ./
 
 SRC = $(wildcard ${DIR_SRC}/*.cpp)
 OBJ = $(patsubst %.cpp, ${DIR_OBJ}/%.o, $(notdir ${SRC})) 
