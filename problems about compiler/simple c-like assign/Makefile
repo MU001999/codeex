@@ -29,4 +29,4 @@ ${DIR_OBJ}:
 
 .PHONY: clean
 clean:
-rm -rf ${DIR_OBJ}/*.o
+	rm -rf ${DIR_OBJ}/*.o
