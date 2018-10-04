@@ -21,26 +21,27 @@ void BaseObject::show()
 
 void PointerObject::show()
 {
-    printf("pointer to ");
     ob->show();
+    printf(" *");
 }
 
 void ReferenceObject::show()
 {
-    printf("reference to ");
     ob->show();
+    printf(" &");
 }
 
 void ArrayObject::show()
 {
-    if (n > 0) printf("array %d of ", n);
-    else printf("array of ");
+    if (n > 0) printf("Array(%d, ", n);
+    else printf("Array(, ");
     ob->show();
+    printf(")");
 }
 
 void FunctionObject::show()
 {
-    printf("function ");
+    printf("Function(");
     if (param_types.size())
     {
         printf("(");
@@ -49,10 +50,13 @@ void FunctionObject::show()
             if (i) printf(", ");
             param_types[i]->show();
         }
-        printf(") ");
+        printf(")");
     }
-    printf("returning ");
+    printf(", (");
     return_type->show();
+    printf("))");
+
+    //printf("%s", decl.c_str());
 }
 
 void VarObject::assign(::std::shared_ptr<Object> ob)

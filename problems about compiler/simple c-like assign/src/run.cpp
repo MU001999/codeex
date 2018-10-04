@@ -7,7 +7,9 @@ using ENV = ::std::shared_ptr<Env>;
 
 void Env::put(::std::shared_ptr<VarObject> ob)
 {
-    this->mem.push_back(ob);
+    mem.push_back(ob);
+    if (ob->size > 4)
+        mem.insert(mem.end(), ob->size / 4 - ((ob->size % 4) == 0), nullptr);
 }
 
 ::std::shared_ptr<VarObject> Env::get(::std::string name)
@@ -23,12 +25,17 @@ void Env::put(::std::shared_ptr<VarObject> ob)
 
 void Env::print_table()
 {
-
-}
-
-void Env::print_memory()
-{
-
+    printf("%-16s| %-16s| %-16s| %s\n", "name", "address", "size", "type");
+    for (size_t i = 0; i < mem.size(); ++i)
+    {
+        auto ob = mem[i];
+        if (ob)
+        {
+            printf("%-16s| %-16p| %-16u| ", ob->name.c_str(), (void*)256 + i*4, static_cast<unsigned int>(ob->size));
+            ob->type->show();
+            printf("\n");
+        }
+    }
 }
 
 
@@ -103,7 +110,10 @@ OBJECT FunctionExpr::run(ENV &top)
     ::std::vector<::std::shared_ptr<Object>> types;
     auto type = return_type->run(top);
     for (auto p : param_types) types.push_back(p->run(top));
-    return ::std::make_shared<FunctionObject>(type, types);
+    auto ob = ::std::make_shared<FunctionObject>(type, types);
+    ob->size = top->line.size();
+    ob->decl = top->line;
+    return ob;
 }
 
 
