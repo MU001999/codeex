@@ -3,6 +3,8 @@
 
 struct Env
 {
+    ::std::string line;
+
     ::std::vector<::std::shared_ptr<VarObject>> mem;
 
     void put(::std::shared_ptr<VarObject>);
@@ -11,7 +13,6 @@ struct Env
     Env() {}
 
     void print_table();
-    void print_memory();
 };
 
 #endif // ENV_H
