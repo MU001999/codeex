@@ -20,7 +20,7 @@ void Interpreter::run()
             top->print_memory();
             continue;
         }
-
+        top->line = line;
         auto node = parser.getNode(line);
         auto obj = node ? node->run(top) : nullptr;
         if (obj)
