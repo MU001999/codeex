@@ -3,17 +3,16 @@
 
 #include <iostream>
 #include <vector>
+#include <stack>
 #include <string>
-#include <memory>
 #include <cctype>
 #include <cstring>
 #include <cstdio>
 
+using namespace std;
+
 #include "tokenizer.h"
-#include "object.h"
 #include "env.h"
-#include "node.h"
 #include "parser.h"
-#include "interpreter.h"
 
 #endif // SCA_H
