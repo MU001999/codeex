@@ -1,6 +1,7 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
+
 struct Token
 {
     enum class TOKEN
@@ -35,18 +36,20 @@ struct Token
         SEM,        // ;
     } token_id;
 
-    ::std::string value;
+    string value;
 
     Token(TOKEN token_id) : token_id(token_id) {}
-    Token(TOKEN token_id, ::std::string value) : token_id(token_id), value(value) {}
-    Token(::std::string value);
+    Token(TOKEN token_id, string value) : token_id(token_id), value(value) {}
+    Token(string value);
 };
+
 
 using TOKEN = Token::TOKEN;
 
+
 struct Tokenizer
 {
-    ::std::vector<Token> tokens;
+    vector<Token> tokens;
 
     enum class State
     {
@@ -59,11 +62,11 @@ struct Tokenizer
         InChar,
     };
 
-    void analy(::std::string);
+    void analy(string);
 
-    Tokenizer() {}
+    Tokenizer() = default;
 
-    ::std::vector<Token> &getTokens(::std::string);
+    vector<Token> &getTokens(string);
 };
 
 

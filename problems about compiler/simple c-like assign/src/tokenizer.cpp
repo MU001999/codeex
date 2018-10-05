@@ -1,7 +1,7 @@
 #include "SCA.h"
 
 
-Token::Token(::std::string value) : value(value)
+Token::Token(string value) : value(value)
 {
     if      (value == "void")   token_id = TOKEN::TVOID;
     else if (value == "char")   token_id = TOKEN::TCHAR;
@@ -14,11 +14,11 @@ Token::Token(::std::string value) : value(value)
 }
 
 
-void Tokenizer::analy(::std::string line)
+void Tokenizer::analy(string line)
 {
     auto state = State::Begin;
     auto reading = line.c_str();
-    ::std::string value;
+    string value;
 
     while (*reading)
     {
@@ -68,6 +68,7 @@ void Tokenizer::analy(::std::string line)
                 break;
             case '\'':
                 state = State::InChar;
+                value += *reading;
                 break;
             default:
                 if (isdigit(*reading))
@@ -92,7 +93,10 @@ void Tokenizer::analy(::std::string line)
                 state = State::InDouble;
                 break;
             default:
-                if (isdigit(*reading)) value += *reading;
+                if (isdigit(*reading))
+                {
+                    value += *reading;
+                }
                 else
                 {
                     tokens.push_back(Token(TOKEN::INTEGER, value));
@@ -105,7 +109,10 @@ void Tokenizer::analy(::std::string line)
             break;
 
         case State::InDouble:
-            if (isdigit(*reading)) value += *reading;
+            if (isdigit(*reading))
+            {
+                value += *reading;
+            }
             else
             {
                 tokens.push_back(Token(TOKEN::FLOAT, value));
@@ -147,12 +154,15 @@ void Tokenizer::analy(::std::string line)
             break;
 
         case State::InChar:
-            tokens.push_back(Token(TOKEN::CHAR, ::std::to_string(*reading - '0')));
+            value += *reading;
+            tokens.push_back(Token(TOKEN::CHAR, value + '\''));
             if (*(++reading) != '\'')
             {
                 printf("syntax error!\n");
                 exit(0);
             }
+            state = State::Begin;
+            value = "";
             break;
         }
         ++reading;
@@ -160,7 +170,7 @@ void Tokenizer::analy(::std::string line)
 }
 
 
-::std::vector<Token> &Tokenizer::getTokens(::std::string line)
+vector<Token> &Tokenizer::getTokens(string line)
 {
     tokens.clear();
     analy(line + "$");
