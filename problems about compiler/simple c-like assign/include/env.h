@@ -1,18 +1,42 @@
 #ifndef ENV_H
 #define ENV_H
 
-struct Env
+
+struct Value
 {
-    ::std::string line;
-
-    ::std::vector<::std::shared_ptr<VarObject>> mem;
-
-    void put(::std::shared_ptr<VarObject>);
-    ::std::shared_ptr<VarObject> get(::std::string);
-
-    Env() {}
-
-    void print_table();
+    int size;
+    string val;
 };
+
+
+struct Memory
+{
+    vector<Value> mem;
+
+    int put(Value);
+    Value get(int);
+    void write(int, Value);
+};
+
+
+struct SymbolTable
+{
+    vector<string> names;
+    vector<int>    addrs;
+    vector<string> types;
+
+    Value get(string);
+    int get_addr(string);
+    string get_name(int);
+    void put(string, string, Value);
+    bool exist(string);
+
+    void print();
+};
+
+
+extern Memory memory;
+extern SymbolTable symtable;
+
 
 #endif // ENV_H
