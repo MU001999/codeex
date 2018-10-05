@@ -1,168 +1,258 @@
 #include "SCA.h"
 
 
-STMT Parser::genStmt()
+static string _cal(TOKEN op, string value)
+{
+    if (op == TOKEN::AND)
+    {
+        if (isdigit(value[0]))
+        {
+            cout << "After & should be the variable name" << endl;
+            return "";
+        }
+        else
+        {
+            return to_string(symtable.get_addr(value));
+        }
+    }
+    else
+    {
+        if (isdigit(value[0]))
+        {
+            return symtable.get_name(stoi(value));
+        }
+        else
+        {
+            return symtable.get_name(symtable.get_addr(value));
+        }
+    }
+}
+
+
+string Parser::genStmt()
 {
     switch (iToken->token_id)
     {
     case TOKEN::TVOID:
-    case TOKEN::TCHAR:
-    case TOKEN::TSHORT:
-    case TOKEN::TINT:
-    case TOKEN::TLONG:
-    case TOKEN::TFLOAT:
-    case TOKEN::TDOUBLE:
+        value.size = 0;
         return genDecl();
+
+    case TOKEN::TCHAR:
+        value.size = 1;
+        return genDecl();
+
+    case TOKEN::TSHORT:
+        value.size = 2;
+        return genDecl();
+
+    case TOKEN::TINT:
+    case TOKEN::TFLOAT:
+        value.size = 4;
+        return genDecl();
+
+    case TOKEN::TLONG:
+    case TOKEN::TDOUBLE:
+        value.size = 8;
+        return genDecl();
+
+    case TOKEN::IDENTIFIER:
+        identifier = genIdent();
+        if (iToken++->token_id == TOKEN::EQ)
+        {
+            value.val = genUnary();
+        }
+        else
+        {
+            value.val = identifier;
+            identifier = "";
+        }
+        return "";
+
     default:
-        return ::std::make_shared<ExprStmt>(genUnary());
+        value.val = genUnary();
+        return "";
     }
 }
 
 
-STMT Parser::genDecl()
+string Parser::genDecl()
 {
-    auto type = ::std::make_shared<TypeExpr>(iToken++->token_id);
+    auto declarator = genDeclarator(iToken++->value);
 
-    auto declarator = genDeclarator(type);
-    EXPR initializer = nullptr;
+    if (iToken++->token_id == TOKEN::EQ)
+    {
+        value.val = genInitializer();
+    }
 
-    if (iToken++->token_id == TOKEN::EQ) initializer = genInitializer();
-
-    return ::std::make_shared<DeclStmt>(declarator, initializer);
+    return declarator;
 }
 
 
-EXPR Parser::genDeclarator(EXPR type)
+string Parser::genDeclarator(string type)
 {
     while (iToken->token_id == TOKEN::STAR || iToken->token_id == TOKEN::AND)
     {
-        if (iToken->token_id == TOKEN::STAR)
-            type = ::std::make_shared<PointerExpr>(type);
-        else
-            type = ::std::make_shared<ReferenceExpr>(type);
-        ++iToken;
+        type += (iToken->token_id == TOKEN::STAR) ? "*" : "&";
+        value.size = (iToken++->token_id == TOKEN::STAR) ? 4 : value.size;
     }
-
     return genDirectDeclarator(type);
 }
 
 
-EXPR Parser::genDirectDeclarator(EXPR type)
+string Parser::genDirectDeclarator(string type)
 {
-    EXPR id = nullptr;
     auto _iToken = iToken;
-    bool f = false;
+    bool need_backtrack = false;
+
+
     if (iToken->token_id == TOKEN::IDENTIFIER)
     {
-        id = genIdent();
+        identifier = genIdent();
     }
     else if (iToken->token_id == TOKEN::LPAREN)
     {
         _iToken = ++iToken;
-        f = true;
+        need_backtrack = true;
+
         int n = 1;
         while (n)
         {
-            if (iToken->token_id == TOKEN::LPAREN) ++n;
-            else if (iToken->token_id == TOKEN::RPAREN) --n;
+            if (iToken->token_id == TOKEN::LPAREN)
+            {
+                ++n;
+            }
+            else if (iToken->token_id == TOKEN::RPAREN)
+            {
+                --n;
+            }
             ++iToken;
         }
     }
 
-    ::std::vector<int> tail;
-    ::std::vector<::std::vector<Token>::iterator> its;
+
+    vector<int> counts;
+    vector<vector<Token>::iterator> its4backtrack;
+
     while (iToken->token_id == TOKEN::LBRACKET || iToken->token_id == TOKEN::LPAREN)
     {
         if (iToken->token_id == TOKEN::LPAREN)
         {
             ++iToken;
-            its.push_back(iToken);
-            tail.push_back(-(int)its.size());
+            its4backtrack.push_back(iToken);
+            counts.push_back(-(int)its4backtrack.size());
             while (iToken++->token_id != TOKEN::RPAREN);
             continue;
         }
+
         ++iToken;
         if (iToken->token_id == TOKEN::RBRACKET)
         {
-            tail.push_back(0);
+            counts.push_back(0);
             ++iToken;
             continue;
         }
         else if (iToken->token_id == TOKEN::INTEGER)
         {
-            tail.push_back(stoi(iToken++->value));
+            counts.push_back(stoi(iToken++->value));
             ++iToken;
             continue;
         }
         else break;
     }
-    if (tail.size())
+
+    if (counts.size())
     {
-        for (int i = tail.size() - 1; i >= 0; --i)
+        for (int i = counts.size() - 1; i >= 0; --i)
         {
-            if (tail[i] > 0) type = ::std::make_shared<ArrayExpr>(tail[i], type);
-            else if (tail[i] == 0) type = ::std::make_shared<ArrayExpr>(type);
+            if (counts[i] > 0)
+            {
+                value.size *= counts[i];
+                type = "Array(" + to_string(counts[i]) + ", " + type + ")";
+            }
+            else if (counts[i] == 0)
+            {
+                 type = "Array(, " + type + ")";
+            }
             else
             {
-                auto _tempi = its[-tail[i]-1];
+                value.size = line_size;
+
+                auto _tempi = its4backtrack[-counts[i]-1];
                 swap(_tempi, iToken);
-                type = ::std::make_shared<FunctionExpr>(type, genParamList());
+                type = "Function((" + genParamList() + "), " + type + ")";
                 swap(_tempi, iToken);
             }
         }
     }
 
-    if (f)
+
+    if (need_backtrack)
     {
         swap(_iToken, iToken);
         type = genDeclarator(type);
         swap(_iToken, iToken);
     }
 
-    if (id) return ::std::make_shared<VarExpr>(::std::dynamic_pointer_cast<IdentifierExpr>(id), type);
+
     return type;
 }
 
 
-::std::vector<EXPR> Parser::genParamList()
+string Parser::genParamList()
 {
-    ::std::vector<EXPR> res;
+    string res;
     while (iToken->token_id != TOKEN::RPAREN)
     {
-        res.push_back(::std::make_shared<TypeExpr>(iToken++->token_id));
-        if (iToken->token_id == TOKEN::COMMA) ++iToken;
+        if (res.size())
+        {
+            res += ", ";
+        }
+        res += iToken++->value;
+        if (iToken->token_id == TOKEN::COMMA)
+        {
+            ++iToken;
+        }
     }
     return res;
 }
 
 
-EXPR Parser::genInitializer()
+string Parser::genInitializer()
 {
-    EXPR initializer = nullptr;
     if (iToken->token_id == TOKEN::LBRACE)
     {
         ++iToken;
-        initializer = genInitializerList();
-        ++iToken;
+        return genInitializerList();
     }
-    else initializer = genUnary();
-    return initializer;
-}
-
-
-EXPR Parser::genInitializerList()
-{
-    ::std::vector<EXPR> exprs;
-    while (iToken->token_id != TOKEN::RPAREN)
+    else
     {
-        exprs.push_back(genUnary());
-        if (iToken->token_id == TOKEN::COMMA) ++iToken;
+        return genUnary();
     }
-    return ::std::make_shared<ListExpr>(exprs);
 }
 
 
-EXPR Parser::genUnary()
+string Parser::genInitializerList()
+{
+    value.val += "{";
+    while (iToken->token_id != TOKEN::RBRACE)
+    {
+        if (value.val.back() != '{')
+        {
+            value.val += ", ";
+        }
+        value.val += genUnary();
+        if (iToken->token_id == TOKEN::COMMA)
+        {
+            ++iToken;
+        }
+    }
+    ++iToken;
+    value.val += "}";
+    return value.val;
+}
+
+
+string Parser::genUnary()
 {
     auto op = iToken->token_id;
     switch (op)
@@ -170,44 +260,23 @@ EXPR Parser::genUnary()
     case TOKEN::AND:
     case TOKEN::STAR:
         ++iToken;
-        return ::std::make_shared<UnaryExpr>(op, genUnary());
+        return _cal(op, genUnary());
     default:
-        return genPrimary();
+        return iToken++->value;
     }
-    return nullptr;
 }
 
 
-EXPR Parser::genPrimary()
+string Parser::genIdent()
 {
-    switch (iToken->token_id)
-    {
-    case TOKEN::IDENTIFIER:
-        return genIdent();
-    case TOKEN::INTEGER:
-        return ::std::make_shared<LongExpr>(stoi(iToken++->value));
-    case TOKEN::FLOAT:
-        return ::std::make_shared<FloatExpr>(stod(iToken++->value));
-    case TOKEN::CHAR:
-        return ::std::make_shared<LongExpr>(stoi(iToken++->value));
-    case TOKEN::STRING:
-        return ::std::make_shared<StringExpr>(iToken++->value);
-    default:
-        break;
-    }
-    return nullptr;
+    return iToken++->value;
 }
 
 
-EXPR Parser::genIdent()
+string Parser::parse(string line)
 {
-    return ::std::make_shared<IdentifierExpr>(iToken++->value);
-}
-
-
-::std::shared_ptr<Node> Parser::getNode(::std::string line)
-{
+    line_size = line.size();
     auto &tokens = tokenizer.getTokens(line);
     iToken = tokens.begin();
-    return (iToken == tokens.end()) ? nullptr : genStmt();
+    return (iToken == tokens.end()) ? "" : genStmt();
 }
