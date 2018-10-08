@@ -11,11 +11,14 @@ struct Value
 
 struct Memory
 {
-    vector<Value> mem;
+    int end;
+    char mem[1000];
 
-    int put(Value);
-    Value get(int);
-    void write(int, Value);
+    int put(char*, int);
+    char *read(int);
+    void write(int, char *, int);
+
+    void print();
 };
 
 
@@ -24,11 +27,18 @@ struct SymbolTable
     vector<string> names;
     vector<int>    addrs;
     vector<string> types;
+    vector<int>    sizes;
 
-    Value get(string);
-    int get_addr(string);
+    string get_value(string);
+    void   put(string, string, int);
+    void   put(string, string, Value);
+    void   assign(string, string);
+
     string get_name(int);
-    void put(string, string, Value);
+    int    get_addr(string);
+    string get_type(string);
+    int    get_size(string);
+
     bool exist(string);
 
     void print();
