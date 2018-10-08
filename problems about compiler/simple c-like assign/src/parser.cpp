@@ -92,7 +92,7 @@ string Parser::genDeclarator(string type)
 {
     while (iToken->token_id == TOKEN::STAR || iToken->token_id == TOKEN::AND)
     {
-        type += (iToken->token_id == TOKEN::STAR) ? "*" : "&";
+        type = ((iToken->token_id == TOKEN::STAR) ? "Pointer_" : "Rreference_") + type;
         value.size = (iToken++->token_id == TOKEN::STAR) ? 4 : value.size;
     }
     return genDirectDeclarator(type);
@@ -167,19 +167,18 @@ string Parser::genDirectDeclarator(string type)
             if (counts[i] > 0)
             {
                 value.size *= counts[i];
-                type = "Array(" + to_string(counts[i]) + ", " + type + ")";
+                type = "Array" + to_string(counts[i]) + "_" + type;
             }
             else if (counts[i] == 0)
             {
-                 type = "Array(, " + type + ")";
+                 type = "Array_" + type;
             }
             else
             {
-                value.size = line_size;
-
+                value.size = line.size();
                 auto _tempi = its4backtrack[-counts[i]-1];
                 swap(_tempi, iToken);
-                type = "Function((" + genParamList() + "), " + type + ")";
+                type = "Function(" + type + ", " + genParamList() + ")";
                 swap(_tempi, iToken);
             }
         }
@@ -233,21 +232,17 @@ string Parser::genInitializer()
 
 string Parser::genInitializerList()
 {
-    value.val += "{";
+    // value.val += "{";
     while (iToken->token_id != TOKEN::RBRACE)
     {
-        if (value.val.back() != '{')
-        {
-            value.val += ", ";
-        }
-        value.val += genUnary();
+        value.val += genUnary() + " ";
         if (iToken->token_id == TOKEN::COMMA)
         {
             ++iToken;
         }
     }
     ++iToken;
-    value.val += "}";
+    // value.val += "}";
     return value.val;
 }
 
@@ -275,8 +270,17 @@ string Parser::genIdent()
 
 string Parser::parse(string line)
 {
-    line_size = line.size();
+    this->line = line;
     auto &tokens = tokenizer.getTokens(line);
     iToken = tokens.begin();
-    return (iToken == tokens.end()) ? "" : genStmt();
+    auto res = (iToken == tokens.end()) ? "" : genStmt();
+    if (res[0] == 'F')
+    {
+        value = Value{ (int)line.size(), line };
+        return "Function: " + line;
+    }
+    else
+    {
+        return res;
+    }
 }

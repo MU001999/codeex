@@ -73,7 +73,7 @@ struct Parser
     string identifier;
     Value value;
 
-    int line_size;
+    string line;
 
     Tokenizer tokenizer;
     vector<Token>::iterator iToken;
