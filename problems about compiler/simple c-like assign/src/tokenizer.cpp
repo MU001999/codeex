@@ -68,7 +68,6 @@ void Tokenizer::analy(string line)
                 break;
             case '\'':
                 state = State::InChar;
-                value += *reading;
                 break;
             default:
                 if (isdigit(*reading))
@@ -155,7 +154,7 @@ void Tokenizer::analy(string line)
 
         case State::InChar:
             value += *reading;
-            tokens.push_back(Token(TOKEN::CHAR, value + '\''));
+            tokens.push_back(Token(TOKEN::CHAR, value));
             if (*(++reading) != '\'')
             {
                 printf("syntax error!\n");
