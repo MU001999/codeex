@@ -271,7 +271,7 @@ string Parser::genIdent()
 string Parser::parse(string line)
 {
     this->line = line;
-    auto &tokens = tokenizer.getTokens(line);
+    auto tokens = Tokenizer::getTokens(line);
     iToken = tokens.begin();
     auto res = (iToken == tokens.end()) ? "" : genStmt();
     if (res[0] == 'F')

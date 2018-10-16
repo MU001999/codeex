@@ -75,7 +75,6 @@ struct Parser
 
     string line;
 
-    Tokenizer tokenizer;
     vector<Token>::iterator iToken;
 
     string genStmt();
