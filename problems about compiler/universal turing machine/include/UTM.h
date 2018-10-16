@@ -2,6 +2,7 @@
 #define UTM_H
 
 #include <iostream>
+#include <vector>
 #include <string>
 #include <cstring>
 #include <cstdio>
