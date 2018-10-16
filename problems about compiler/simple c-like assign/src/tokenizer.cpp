@@ -14,8 +14,11 @@ Token::Token(string value) : value(value)
 }
 
 
-void Tokenizer::analy(string line)
+vector<Token> Tokenizer::getTokens(string line)
 {
+    vector<Token> tokens;
+    line += '$';
+
     auto state = State::Begin;
     auto reading = line.c_str();
     string value;
@@ -166,12 +169,6 @@ void Tokenizer::analy(string line)
         }
         ++reading;
     }
-}
 
-
-vector<Token> &Tokenizer::getTokens(string line)
-{
-    tokens.clear();
-    analy(line + "$");
     return tokens;
 }

@@ -49,8 +49,6 @@ using TOKEN = Token::TOKEN;
 
 struct Tokenizer
 {
-    vector<Token> tokens;
-
     enum class State
     {
         Begin,
@@ -62,11 +60,7 @@ struct Tokenizer
         InChar,
     };
 
-    void analy(string);
-
-    Tokenizer() = default;
-
-    vector<Token> &getTokens(string);
+    static vector<Token> getTokens(string);
 };
 
 
