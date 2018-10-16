@@ -4,9 +4,9 @@
 
 struct Token
 {
-    enum TOKEN
+    enum class TOKEN
     {
-        END,     // #
+        END,     // $
         COLON,   // :
         COMMA,   // ,
         SEM,     // ;
@@ -16,15 +16,35 @@ struct Token
 
         SOI,     // [a-zA-Z0-9]+    // State or Input 
 
-        LQ,      // Q
-        LSIGMA,  // Sigma
-        LQ0,     // q0
-        LACCEPT, // Accept
-        LREJECT, // Reject
-        LDELTA,  // Delta
+        Q,      // Q
+        SIGMA,  // Sigma
+        Q0,     // q0
+        ACCEPT, // Accept
+        REJECT, // Reject
+        DELTA,  // Delta
     } token_id;
 
     string value;
+
+    Token(TOKEN token_id) : token_id(token_id) {}
+    Token(string value);
+};
+
+
+using TOKEN = Token::TOKEN;
+
+
+struct Tokenizer
+{
+    enum class State
+    {
+        Begin,
+        
+        InArrow,
+        InSOI,
+    };
+
+    static vector<Token> getTokens(string);
 };
 
 
