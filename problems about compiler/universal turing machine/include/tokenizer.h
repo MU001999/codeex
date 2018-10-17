@@ -39,8 +39,6 @@ struct Tokenizer
     enum class State
     {
         Begin,
-        
-        InArrow,
         InSOI,
     };
 

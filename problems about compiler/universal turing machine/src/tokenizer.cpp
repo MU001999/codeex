@@ -18,5 +18,71 @@ vector<Token> Tokenizer::getTokens(string line)
     vector<Token> tokens;
     line += '$';
 
+    auto state = State::Begin;
+    auto reading = line.c_str();
+    string value;
+
+    while (*reading)
+    {
+        switch (state)
+        {
+        case Tokenizer::State::Begin:
+            switch (*reading)
+            {
+            case '$':
+                tokens.push_back(Token(TOKEN::END));
+                break;
+            case ':':
+                tokens.push_back(Token(TOKEN::COLON));
+                break;
+            case ',':
+                tokens.push_back(Token(TOKEN::COMMA));
+                break;
+            case ';':
+                tokens.push_back(Token(TOKEN::SEM));
+                break;
+            case '(':
+                tokens.push_back(Token(TOKEN::LPAREN));
+                break;
+            case ')':
+                tokens.push_back(Token(TOKEN::RPAREN));
+                break;
+            case '-':
+                if (*(reading + 1) == '>')
+                {
+                    tokens.push_back(Token(TOKEN::ARROW));
+                    ++reading;
+                }
+                else
+                {
+                    tokens.push_back(Token("-"));
+                }
+                break;
+            default:
+                if (*reading == '_' || isalnum(*reading))
+                {
+                    state = State::InSOI;
+                    value += *reading;
+                }
+                break;
+            }
+            break;
+        case Tokenizer::State::InSOI:
+            if (*reading == '_' || isalnum(*reading))
+            {
+                value += *reading;
+            }
+            else
+            {
+                tokens.push_back(Token(value));
+                state = State::Begin;
+                value = "";
+                --reading;
+            }
+            break;
+        }
+        ++reading;
+    }
+
     return tokens;
 }
