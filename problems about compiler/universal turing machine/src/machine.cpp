@@ -3,14 +3,13 @@
 
 tuple<string, string, string> Machine::Delta(string state, string input)
 {
-    return map4delta[make_tuple(state, input)];
+    return (map4delta.count(state) && map4delta[state].count(input)) ? map4delta[state][input] : make_tuple("", "", "");
 }
 
 
 void Machine::run(string line)
 {
     auto inputs = Parser::gen_input(line);
-    
     auto reading = inputs.begin();
 
     while (reading != inputs.end())
@@ -20,21 +19,26 @@ void Machine::run(string line)
         {
             if (Accept.count(state))
             {
-                cout << "In Accept" << endl;
+                cout << "end with Accept-State " << state << endl;
             }
             else if (Reject.count(state))
             {
-                cout << "In Reject" << endl;
+                cout << "end with Reject-State " << state << endl;
             }
             else
             {
-                cout << "Not Accept or Reject" << endl;
+                cout << "end with error" << endl;
             }
+            for (auto s : inputs) cout << s;
+            cout << endl;
+            exit(0);
         }
         else
         {
-            printf("(%s, %s)->(%s, %s, %s)\n", state.c_str(), (*reading).c_str(), get<0>(res).c_str(), get<1>(res).c_str(), get<2>(res).c_str());
+            printf("(%s, %s) -> (%s, %s, %s)\n", state.c_str(), (*reading).c_str(), get<0>(res).c_str(), get<1>(res).c_str(), get<2>(res).c_str());
+
             state = get<0>(res);
+            *reading = get<1>(res);
             auto _3 = get<2>(res);
             if (_3 == "R") ++reading;
             else if (_3 == "L") --reading;
@@ -72,7 +76,8 @@ void Machine::init(string line)
     case TOKEN::LPAREN:
     {
         auto res = Parser::gen_4delta(tokens);
-        map4delta[get<0>(res)] = get<1>(res);
+        auto first = get<0>(res);
+        map4delta[get<0>(first)][get<1>(first)] = get<1>(res);
     }
         break;
     default:
