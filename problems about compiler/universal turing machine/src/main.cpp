@@ -43,14 +43,21 @@ void run(string path)
 
 int main(int argc, char *argv[])
 {
-    Machine mac;
     string path4utm, path4type;
 
     if (argc > 1) path4utm = argv[1];
-    else getline(cin, path4utm);
+    else
+    {
+        cout << "input path of file for universal turing machine:" << endl;
+        getline(cin, path4utm);
+    }
     
     if (argc > 2) path4type = argv[2];
-    else getline(cin, path4type);
+    else
+    {
+        cout << "input path of file for paper type:" << endl;
+        getline(cin, path4type);
+    }
 
     init(path4utm);
     run(path4type);
