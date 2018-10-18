@@ -18,7 +18,7 @@ set<string> Parser::gen_set(vector<Token> tokens)
 
 
 
-tuple<tuple<string, char>, tuple<string, char, char>> Parser::gen_4delta(vector<Token> tokens)
+tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(vector<Token> tokens)
 {
     ptrdiff_t base = tokens[0].token_id == TOKEN::DELTA ? 2 : 0;
 
@@ -40,7 +40,7 @@ tuple<tuple<string, char>, tuple<string, char, char>> Parser::gen_4delta(vector<
         && TID(11) == TOKEN::SOI
         && TID(12) == TOKEN::RPAREN)
     {
-        return make_tuple(make_tuple(TKV(1), TKV(3)[0]), make_tuple(TKV(7), TKV(9)[0], TKV(11)[0]));
+        return make_tuple(make_tuple(TKV(1), TKV(3)), make_tuple(TKV(7), TKV(9), TKV(11)));
     }
     else
     {
@@ -54,9 +54,9 @@ tuple<tuple<string, char>, tuple<string, char, char>> Parser::gen_4delta(vector<
 }
 
 
-string Parser::gen_input(string line)
+vector<string> Parser::gen_input(string line)
 {
-    string res;    
+    vector<string> res;    
     
     auto tokens = Tokenizer::getTokens(line);
 
@@ -64,7 +64,7 @@ string Parser::gen_input(string line)
     {
         if (token.token_id == TOKEN::SOI)
         {
-            res += token.value;
+            res.push_back(token.value);
         }
     }
 

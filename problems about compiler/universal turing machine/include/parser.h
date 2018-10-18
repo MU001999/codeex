@@ -6,9 +6,9 @@ struct Parser
 {
     static set<string> gen_set(vector<Token>);
     
-    static tuple<tuple<string, char>, tuple<string, char, char>> gen_4delta(vector<Token>);
+    static tuple<tuple<string, string>, tuple<string, string, string>> gen_4delta(vector<Token>);
 
-    static string gen_input(string);
+    static vector<string> gen_input(string);
 };
 
 
