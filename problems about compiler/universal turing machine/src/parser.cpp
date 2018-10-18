@@ -20,12 +20,12 @@ set<string> Parser::gen_set(vector<Token> tokens)
 
 tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(vector<Token> tokens)
 {
-    ptrdiff_t base = tokens[0].token_id == TOKEN::DELTA ? 2 : 0;
+    size_t base = tokens[0].token_id == TOKEN::DELTA ? 2 : 0;
 
 #define TID(n) tokens[base + n].token_id
 #define TKV(n) tokens[base + n].value
 
-    if (tokens.size() - base == 14
+    if (tokens.size() - base == 15
         && TID(0)  == TOKEN::LPAREN
         && TID(1)  == TOKEN::SOI
         && TID(2)  == TOKEN::COMMA
@@ -44,12 +44,12 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
     }
     else
     {
-        cout << "content of Delta should be line \"(state, chr)->(state, chr, action)\"";
+        cout << "content of Delta should be line \"(state, chr)->(state, chr, action)\"" << endl;
         exit(0);
     }
 
-#undef TID(n)
-#undef TKV(n)
+#undef TID
+#undef TKV
 
 }
 
