@@ -18,6 +18,5 @@ using namespace std;
 #include "tokenizer.h"
 #include "parser.h"
 #include "machine.h"
-#include "readtxt.h"
 
 #endif // UTM_H
