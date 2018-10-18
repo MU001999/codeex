@@ -1,22 +1,22 @@
 #include <UTM.h>
 
 
-tuple<string, char, char> Machine::Delta(string s, char c)
+tuple<string, string, string> Machine::Delta(string state, string input)
 {
-    return map4delta[make_tuple(s, c)];
+    return map4delta[make_tuple(state, input)];
 }
 
 
 void Machine::run(string line)
 {
-    line = Parser::gen_input(line);
+    auto inputs = Parser::gen_input(line);
     
-    auto reading = line.c_str();
+    auto reading = inputs.begin();
 
-    while (*reading)
+    while (reading != inputs.end())
     {
         auto res = Delta(state, *reading);
-        if (get<2>(res) == 0)
+        if (get<2>(res) == "")
         {
             if (Accept.count(state))
             {
@@ -33,8 +33,11 @@ void Machine::run(string line)
         }
         else
         {
-            printf("(%s, %c)->(%s, %c, %c)", state.c_str(), *reading, get<0>(res).c_str(), get<1>(res), get<2>(res));
+            printf("(%s, %s)->(%s, %s, %s)\n", state.c_str(), (*reading).c_str(), get<0>(res).c_str(), get<1>(res).c_str(), get<2>(res).c_str());
             state = get<0>(res);
+            auto _3 = get<2>(res);
+            if (_3 == "R") ++reading;
+            else if (_3 == "L") --reading;
         }
     }
 }

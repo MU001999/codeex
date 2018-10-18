@@ -11,8 +11,8 @@ struct Machine
 
     string state;
 
-    unordered_map<tuple<string, char>, tuple<string, char, char>> map4delta;
-    tuple<string, char, char> Delta(string, char);
+    unordered_map<tuple<string, string>, tuple<string, string, string>> map4delta;
+    tuple<string, string, string> Delta(string, string);
 
     void run(string);
 
