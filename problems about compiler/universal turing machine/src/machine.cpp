@@ -47,6 +47,68 @@ void Machine::run(string line)
 }
 
 
+void Machine::check()
+{
+    for (auto &s : Sigma)
+    {
+        if (s.size() != 1)
+        {
+            cout << "element of Sigma shoule be single character" << endl;
+            exit(0);
+        }
+    }
+
+    for (auto &s : Accept)
+    {
+        if (Q.count(s) == 0)
+        {
+            cout << "Accept should be a subset of Q" << endl;
+            exit(0);
+        }
+        if (Reject.count(s))
+        {
+            cout << "Accept and Reject should be disjoint" << endl;
+            exit(0);
+        }
+    }
+
+    for (auto &s : Reject)
+    {
+        if (Q.count(s) == 0)
+        {
+            cout << "Reject should be a subset of Q" << endl;
+            exit(0);
+        }
+    }
+
+    if (Q.count(q0) == 0)
+    {
+        cout << "q0 should belong to Q" << endl;
+        exit(0);
+    }
+
+    for (auto it : map4delta)
+    {
+        if (Q.count(it.first) == 0)
+        {
+            cout << "The states described by Delta should belong to Q" << endl;
+            exit(0);
+        }
+        else
+        {
+            for (auto sit : map4delta[it.first])
+            {
+                if (Q.count(get<0>(sit.second)) == 0)
+                {
+                    cout << "The states described by Delta should belong to Q" << endl;
+                    exit(0);
+                }
+            }
+        }
+    }
+}
+
+
 void Machine::init(string line)
 {
     if (line.empty()) return;

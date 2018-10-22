@@ -15,7 +15,7 @@ struct Machine
     tuple<string, string, string> Delta(string, string);
 
     void run(string);
-
+    void check();
     void init(string);
 };
 
