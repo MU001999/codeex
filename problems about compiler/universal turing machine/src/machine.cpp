@@ -12,7 +12,7 @@ void Machine::run(string line)
     auto inputs = Parser::gen_input(line);
     auto reading = inputs.begin();
 
-    while (reading != inputs.end())
+    while (reading != inputs.end()) 
     {
         auto res = Delta(state, *reading);
         if (get<2>(res) == "")
@@ -31,9 +31,12 @@ void Machine::run(string line)
             }
 
             cout << "content of paper type will be: ";
-            for (auto s : inputs) cout << s;
-            cout << endl;
-            exit(0);
+            for (auto it = inputs.begin(); it != inputs.end(); ++it)
+            {
+                cout << ((it != inputs.begin()) ? "," + *it : *it);
+            }
+            cout << ";" << endl;
+            return;
         }
         else
         {
