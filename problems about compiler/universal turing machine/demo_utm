@@ -4,6 +4,6 @@ q0: p;
 Accept: q3;
 Reject: p2;
 Delta: (p,0)->(q1,a,R),
-       (q1,1)->(q2,b,L),
+       (q1,1)->(q2,b,R),
        (q2,a)->(q3,0,R),
        (q3,b)->(q3,1,-);
