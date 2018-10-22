@@ -29,6 +29,8 @@ void Machine::run(string line)
             {
                 cout << "end with error" << endl;
             }
+
+            cout << "content of paper type will be: ";
             for (auto s : inputs) cout << s;
             cout << endl;
             exit(0);
