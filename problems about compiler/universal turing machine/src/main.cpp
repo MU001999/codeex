@@ -60,6 +60,9 @@ int main(int argc, char *argv[])
     }
 
     init(path4utm);
+
+    mac.check();
+
     run(path4type);
 
     return 0;
