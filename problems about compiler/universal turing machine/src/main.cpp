@@ -35,6 +35,9 @@ void run(string path)
 
     string line;
     getline(fin, line);
+
+    cout << "content of paper type: " << line << endl;
+
     mac.run(line);
 
     fin.close();
