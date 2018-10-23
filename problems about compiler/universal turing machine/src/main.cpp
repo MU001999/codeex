@@ -36,7 +36,7 @@ void run(string path)
     string line;
     getline(fin, line);
 
-    cout << "content of paper type: " << line << endl;
+    cout << "content of tape: " << line << endl;
 
     mac.run(line);
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         cout << "input path of file for universal turing machine:" << endl;
         getline(cin, path4utm);
     }
-    
+
     if (argc > 2) path4type = argv[2];
     else
     {

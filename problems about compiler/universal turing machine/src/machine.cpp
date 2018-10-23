@@ -30,7 +30,7 @@ void Machine::run(string line)
                 cout << "end with error" << endl;
             }
 
-            cout << "content of paper type will be: ";
+            cout << "content of tape will be: ";
             for (auto it = inputs.begin(); it != inputs.end(); ++it)
             {
                 cout << ((it != inputs.begin()) ? "," + *it : *it);
