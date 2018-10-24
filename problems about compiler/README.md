@@ -1,1 +1,1 @@
-record the interesting exercises about compiler
+record the interesting problems or exercises about compiler
