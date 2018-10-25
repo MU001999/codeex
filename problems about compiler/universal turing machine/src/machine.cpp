@@ -9,11 +9,11 @@ tuple<string, string, string> Machine::Delta(string state, string input)
 
 void Machine::run(string line)
 {
-    auto inputs = Parser::gen_input(line);
+    auto inputs = Parser::gen_input(line, Sigma);
     inputs.resize(inputs.size() * 2, " ");
     inputs.insert(inputs.begin(), " ");
 
-    auto reading = inputs.begin();
+    auto reading = inputs.begin() + 1;
 
     while (reading != inputs.end()) 
     {
