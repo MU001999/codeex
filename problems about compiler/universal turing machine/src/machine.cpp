@@ -10,6 +10,7 @@ tuple<string, string, string> Machine::Delta(string state, string input)
 void Machine::run(string line)
 {
     auto inputs = Parser::gen_input(line);
+    inputs.resize(inputs.size() * 2, " ");
     auto reading = inputs.begin();
 
     while (reading != inputs.end()) 
@@ -31,7 +32,7 @@ void Machine::run(string line)
             }
 
             cout << "content of tape will be: ";
-            for (auto it = inputs.begin(); it != inputs.end(); ++it)
+            for (auto it = inputs.cbegin(); it != inputs.cend(); ++it)
             {
                 cout << ((it != inputs.begin()) ? "," + *it : *it);
             }
