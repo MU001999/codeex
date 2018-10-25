@@ -11,6 +11,8 @@ void Machine::run(string line)
 {
     auto inputs = Parser::gen_input(line);
     inputs.resize(inputs.size() * 2, " ");
+    inputs.insert(inputs.begin(), " ");
+
     auto reading = inputs.begin();
 
     while (reading != inputs.end()) 
@@ -36,9 +38,9 @@ void Machine::run(string line)
             int j = inputs.size();
             while (inputs[--j] == " ");
 
-            for (auto i = 0; i != j + 1; ++i)
+            for (auto i = 1; i != j + 1; ++i)
             {
-                cout << ((i != 0) ? "," + inputs[i] : inputs[i]);
+                cout << ((i != 1) ? "," + inputs[i] : inputs[i]);
             }
             cout << ";" << endl;
             return;
