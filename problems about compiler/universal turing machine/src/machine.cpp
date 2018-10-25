@@ -32,9 +32,13 @@ void Machine::run(string line)
             }
 
             cout << "content of tape will be: ";
-            for (auto it = inputs.cbegin(); it != inputs.cend(); ++it)
+
+            int j = inputs.size();
+            while (inputs[--j] == " ");
+
+            for (auto i = 0; i != j + 1; ++i)
             {
-                cout << ((it != inputs.begin()) ? "," + *it : *it);
+                cout << ((i != 0) ? "," + inputs[i] : inputs[i]);
             }
             cout << ";" << endl;
             return;
