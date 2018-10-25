@@ -1,9 +1,0 @@
-Q     : q1, q2, q3, p, p2;
-Sigma : a, b, 1, 0;
-q0    : p;
-Accept: q3;
-Reject: p2;
-Delta : (p,0)->(q1,a,R),
-        (q1,1)->(q2,b,R),
-        (q2,a)->(q3,0,R),
-        (q3,b)->(q3,1,-);
