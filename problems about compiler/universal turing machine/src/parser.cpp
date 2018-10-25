@@ -42,6 +42,53 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
     {
         return make_tuple(make_tuple(TKV(1), TKV(3)), make_tuple(TKV(7), TKV(9), TKV(11)));
     }
+    else if (tokens.size() - base == 14
+        && TID(0) == TOKEN::LPAREN
+        && TID(1) == TOKEN::SOI
+        && TID(2) == TOKEN::COMMA
+        && TID(3) == TOKEN::RPAREN
+        && TID(4) == TOKEN::ARROW
+        && TID(5) == TOKEN::LPAREN
+        && TID(6) == TOKEN::SOI
+        && TID(7) == TOKEN::COMMA
+        && TID(8) == TOKEN::SOI
+        && TID(9) == TOKEN::COMMA
+        && TID(10) == TOKEN::SOI
+        && TID(11) == TOKEN::RPAREN)
+    {
+        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(7), TKV(9), TKV(11)));
+    }
+    else if (tokens.size() - base == 14
+        && TID(0) == TOKEN::LPAREN
+        && TID(1) == TOKEN::SOI
+        && TID(2) == TOKEN::COMMA
+        && TID(3) == TOKEN::SOI
+        && TID(4) == TOKEN::RPAREN
+        && TID(5) == TOKEN::ARROW
+        && TID(6) == TOKEN::LPAREN
+        && TID(7) == TOKEN::SOI
+        && TID(8) == TOKEN::COMMA
+        && TID(9) == TOKEN::COMMA
+        && TID(10) == TOKEN::SOI
+        && TID(11) == TOKEN::RPAREN)
+    {
+        return make_tuple(make_tuple(TKV(1), TKV(3)), make_tuple(TKV(7), " ", TKV(11)));
+    }
+    else if (tokens.size() - base == 13
+        && TID(0) == TOKEN::LPAREN
+        && TID(1) == TOKEN::SOI
+        && TID(2) == TOKEN::COMMA
+        && TID(3) == TOKEN::RPAREN
+        && TID(4) == TOKEN::ARROW
+        && TID(5) == TOKEN::LPAREN
+        && TID(6) == TOKEN::SOI
+        && TID(7) == TOKEN::COMMA
+        && TID(8) == TOKEN::COMMA
+        && TID(9) == TOKEN::SOI
+        && TID(10) == TOKEN::RPAREN)
+    {
+        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(7), " ", TKV(11)));
+    }
     else
     {
         cout << "content of Delta should be line \"(state, chr)->(state, chr, action)\"" << endl;
@@ -60,11 +107,15 @@ vector<string> Parser::gen_input(string line)
     
     auto tokens = Tokenizer::getTokens(line);
 
-    for (auto &token : tokens)
+    for (auto it = tokens.cbegin(); it != tokens.cend(); ++it)
     {
-        if (token.token_id == TOKEN::SOI)
+        if (it->token_id == TOKEN::SOI)
         {
-            res.push_back(token.value);
+            res.push_back(it->value);
+        }
+        else if (it->token_id == TOKEN::COMMA && (it + 1) != tokens.cend() && (it + 1)->token_id == TOKEN::COMMA)
+        {
+            res.push_back(" ");
         }
     }
 
