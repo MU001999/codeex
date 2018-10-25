@@ -56,7 +56,7 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
         && TID(10) == TOKEN::SOI
         && TID(11) == TOKEN::RPAREN)
     {
-        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(7), TKV(9), TKV(11)));
+        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(6), TKV(8), TKV(10)));
     }
     else if (tokens.size() - base == 14
         && TID(0) == TOKEN::LPAREN
@@ -72,7 +72,7 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
         && TID(10) == TOKEN::SOI
         && TID(11) == TOKEN::RPAREN)
     {
-        return make_tuple(make_tuple(TKV(1), TKV(3)), make_tuple(TKV(7), " ", TKV(11)));
+        return make_tuple(make_tuple(TKV(1), TKV(3)), make_tuple(TKV(7), " ", TKV(10)));
     }
     else if (tokens.size() - base == 13
         && TID(0) == TOKEN::LPAREN
@@ -87,7 +87,7 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
         && TID(9) == TOKEN::SOI
         && TID(10) == TOKEN::RPAREN)
     {
-        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(7), " ", TKV(11)));
+        return make_tuple(make_tuple(TKV(1), " "), make_tuple(TKV(6), " ", TKV(9)));
     }
     else
     {
@@ -101,7 +101,7 @@ tuple<tuple<string, string>, tuple<string, string, string>> Parser::gen_4delta(v
 }
 
 
-vector<string> Parser::gen_input(string line)
+vector<string> Parser::gen_input(string line, set<string> &Sigma)
 {
     vector<string> res;    
     
@@ -111,6 +111,16 @@ vector<string> Parser::gen_input(string line)
     {
         if (it->token_id == TOKEN::SOI)
         {
+            if (it->value.size() != 1)
+            {
+                cout << "content of tape should be single character" << endl;
+                exit(0);
+            }
+            else if (!Sigma.count(it->value))
+            {
+                cout << "content of tape should belong to Sigma" << endl;
+                exit(0);
+            }
             res.push_back(it->value);
         }
         else if (it->token_id == TOKEN::COMMA && (it + 1) != tokens.cend() && (it + 1)->token_id == TOKEN::COMMA)

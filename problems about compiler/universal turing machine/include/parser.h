@@ -8,7 +8,7 @@ struct Parser
     
     static tuple<tuple<string, string>, tuple<string, string, string>> gen_4delta(vector<Token>);
 
-    static vector<string> gen_input(string);
+    static vector<string> gen_input(string, set<string>&);
 };
 
 
