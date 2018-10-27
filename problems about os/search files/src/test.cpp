@@ -1,4 +1,4 @@
-#include "SC.h"
+#include "sc.hpp"
 
 
 int main(int argc, char *argv[])
