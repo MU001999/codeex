@@ -77,14 +77,14 @@ void create_content()
 
     for (char n1 = 'A'; n1 <= 'Z'; ++n1)
     {
-        string path = "./content/"; path += n1;
+        auto path = string("./content/") + n1;
         auto err = mkdir(path.c_str(), 0755);
         if (err) PEXIT;
 
         for (char n2 = 'a'; n2 <= 'z'; ++n2)
         {
-            string path = "./content/"; path += n1; path += '/'; path += n2;
-            auto err = mkdir(path.c_str(), 0755);
+            auto _path = path + string("/") + n2;
+            auto err = mkdir(_path.c_str(), 0755);
             if (err) PEXIT;
         }
     }
@@ -140,7 +140,7 @@ void copy_files_from_sources2content()
     {
         if (entry->d_type == DT_REG)
         {
-            string src = path + entry->d_name;
+            auto src = path + entry->d_name;
             _copy(src, _gen_dest(src));
         }
     }
