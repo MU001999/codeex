@@ -23,6 +23,7 @@ using namespace std;
 void create_sources();
 void create_content();
 void copy_files_from_sources2content();
+void delete_sources();
 
 
 int main(int argc, char *argv[])
@@ -34,7 +35,17 @@ int main(int argc, char *argv[])
     copy_files_from_sources2content();
 
     // for test
+
+    printf("Operation 1:\n\n");
     findanel("./content", 'A', func1);
+
+    printf("\nOperation 2:\n\n");
+    findanel("./content", 'B', func2);
+
+    // printf("\nOperation 3:\n\n");
+    // findanel("./content", 'C', func3);
+
+    delete_sources();
 
     return 0;
 }
@@ -50,8 +61,7 @@ string _gen_random_string(char base, int scope, int len)
 
 void create_sources()
 {
-    auto err = mkdir("./sources", 0755);
-    if (err) PEXIT;
+    if (mkdir("./sources", 0755)) PEXIT;
 
     unordered_set<string> exits_names;
     while (exits_names.size() < 1000)
@@ -75,20 +85,17 @@ void create_sources()
 
 void create_content()
 {
-    auto err = mkdir("./content", 0755);
-    if (err) PEXIT;
+    if (mkdir("./content", 0755)) PEXIT;
 
     for (char n1 = 'A'; n1 <= 'Z'; ++n1)
     {
         auto path = string("./content/") + n1;
-        auto err = mkdir(path.c_str(), 0755);
-        if (err) PEXIT;
+        if (mkdir(path.c_str(), 0755)) PEXIT;
 
         for (char n2 = 'a'; n2 <= 'z'; ++n2)
         {
             auto _path = path + string("/") + n2;
-            auto err = mkdir(_path.c_str(), 0755);
-            if (err) PEXIT;
+            if (mkdir(_path.c_str(), 0755)) PEXIT;
         }
     }
 }
@@ -102,8 +109,8 @@ string _gen_dest(string src)
     if (fd == -1) PEXIT;
 
     char buf[1];
-    auto sz = read(fd, buf, 1);
-    if (sz == -1) PEXIT;
+    if (read(fd, buf, 1) == -1) PEXIT;
+
     close(fd);
 
     res += src[src.size() - 5]; res += '/';
@@ -149,4 +156,26 @@ void copy_files_from_sources2content()
     }
 
     closedir(dirptr);
+}
+
+
+void delete_sources()
+{
+    string path = "./sources/";
+
+    auto dirptr = opendir(path.c_str());
+    if (dirptr == NULL) PEXIT;
+
+    struct dirent *entry = NULL;
+    while ((entry = readdir(dirptr)))
+    {
+        if (entry->d_type == DT_REG)
+        {
+            auto src = path + entry->d_name;
+            if (remove(src.c_str())) PEXIT;
+        }
+    }
+
+    closedir(dirptr);
+    rmdir(path.c_str());
 }
