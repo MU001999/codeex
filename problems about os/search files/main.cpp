@@ -33,6 +33,9 @@ int main(int argc, char *argv[])
     create_content();
     copy_files_from_sources2content();
 
+    // for test
+    findanel("./content", 'A', func1);
+
     return 0;
 }
 
