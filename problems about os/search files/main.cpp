@@ -23,7 +23,7 @@ using namespace std;
 void create_sources();
 void create_content();
 void copy_files_from_sources2content();
-void delete_sources();
+void delete_dir(const char *path);
 
 
 int main(int argc, char *argv[])
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     // printf("\nOperation 3:\n\n");
     // findanel("./content", 'C', func3);
 
-    delete_sources();
+    delete_dir("./sources");
 
     return 0;
 }
@@ -159,11 +159,9 @@ void copy_files_from_sources2content()
 }
 
 
-void delete_sources()
+void delete_dir(const char *path)
 {
-    string path = "./sources/";
-
-    auto dirptr = opendir(path.c_str());
+    auto dirptr = opendir(path);
     if (dirptr == NULL) PEXIT;
 
     struct dirent *entry = NULL;
@@ -171,11 +169,19 @@ void delete_sources()
     {
         if (entry->d_type == DT_REG)
         {
-            auto src = path + entry->d_name;
+            auto src = string(path) + "/" + string(entry->d_name);
             if (remove(src.c_str())) PEXIT;
+        }
+        else if (entry->d_type == DT_DIR)
+        {
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+            {
+                auto _path = std::string(path) + '/' + std::string(entry->d_name);
+                delete_dir(_path.c_str());
+            }
         }
     }
 
     closedir(dirptr);
-    rmdir(path.c_str());
+    rmdir(path);
 }
