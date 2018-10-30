@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <string>
 
 #define PEXIT   {\
@@ -15,6 +16,7 @@
 void func1(const char *path)
 {
     auto fd = open(path, O_RDWR);
+    if (fd == -1) PEXIT;
 
     std::string _path = path;
     printf("path: %s\n", _path.substr(0, _path.rfind('/')).c_str());
@@ -24,12 +26,10 @@ void func1(const char *path)
     if (read(fd, buf, 4096) == -1) PEXIT;
     printf("content: %s\n", buf);
 
-    auto err = ftruncate(fd, 80);
-    if (err) PEXIT;
+    if (ftruncate(fd, 80)) PEXIT;
 
     memset(buf, 0, sizeof(buf));
-    err = lseek(fd, 0, SEEK_SET);
-    if (err || read(fd, buf, 4096) == -1) PEXIT;
+    if (lseek(fd, 0, SEEK_SET) || read(fd, buf, 4096) == -1) PEXIT;
     printf("new content: %s\n", buf);
 
     std::string new_name;
@@ -39,15 +39,48 @@ void func1(const char *path)
     close(fd);
 
     auto new_path = _path.substr(0, _path.rfind('/') + 1) + new_name;
-    err = rename(path, new_path.c_str());
-    if (err) PEXIT;
+    if (rename(path, new_path.c_str())) PEXIT;
 }
 
 
-void func2(const char *path);
+void func2(const char *path)
+{
+    auto fd = open(path, O_RDONLY);
+    if (fd == -1) PEXIT;
+
+    std::string _path = path;
+    printf("filename: %s\n", _path.substr(_path.rfind('/') + 1).c_str());
+
+    struct stat buf;
+
+    if (fstat(fd, &buf)) PEXIT;
+    printf("permission: %03o\n", buf.st_mode & 1023);
+
+    if (fchmod(fd, 0777) || fstat(fd, &buf)) PEXIT;
+    printf("new permission: %03o\n\n", buf.st_mode & 1023);
+
+    close(fd);
+}
 
 
-void func3(const char *path);
+void func3(const char *path)
+{
+    auto fd = open(path, O_RDWR);
+    if (fd == -1) PEXIT;
+
+    std::string _path = path;
+    printf("filename: %s\n", _path.substr(_path.rfind('/') + 1).c_str());
+
+    struct stat buf;
+
+    if (fstat(fd, &buf)) PEXIT;
+    printf("uid: %u\ngid: %u\n", buf.st_uid, buf.st_gid);
+
+    if (fchown(fd, buf.st_uid + 1, buf.st_gid + 1) || fstat(fd, &buf)) PEXIT;
+    printf("new uid: %u\nnew gid: %u\n\n", buf.st_uid, buf.st_gid);
+
+    close(fd);
+}
 
 
 void findanel(const char *dirpath, char c, void(*func)(const char*))
