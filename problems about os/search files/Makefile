@@ -12,4 +12,4 @@ ${BIN_TARGET}: ${SRC}
 
 .PHONY: clean
 clean:
-	rm -rf ${TARGET}
+	rm -rf ${TARGET} sources content
