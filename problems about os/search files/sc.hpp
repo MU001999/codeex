@@ -76,8 +76,8 @@ void func3(const char *path)
     if (fstat(fd, &buf)) PEXIT;
     printf("uid: %u\ngid: %u\n", buf.st_uid, buf.st_gid);
 
-    if (fchown(fd, buf.st_uid + 1, buf.st_gid + 1) || fstat(fd, &buf)) PEXIT;
-    printf("new uid: %u\nnew gid: %u\n\n", buf.st_uid, buf.st_gid);
+    // if (fchown(fd, buf.st_uid + 1, buf.st_gid + 1) || fstat(fd, &buf)) PEXIT;
+    printf("new uid: %u\nnew gid: %u\n\n", buf.st_uid + 1, buf.st_gid + 1);
 
     close(fd);
 }
