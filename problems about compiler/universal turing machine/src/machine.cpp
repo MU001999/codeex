@@ -49,9 +49,9 @@ void Machine::run(string line)
         {
             printf("(%s, %s) -> (%s, %s, %s)\n", state.c_str(), (*reading).c_str(), get<0>(res).c_str(), get<1>(res).c_str(), get<2>(res).c_str());
 
-            state = get<0>(res);
-            *reading = get<1>(res);
-            auto _3 = get<2>(res);
+            ::std::string _3;
+            ::std::tie(state, *reading, _3) = res;
+
             if (_3 == "R") ++reading;
             else if (_3 == "L") --reading;
         }
