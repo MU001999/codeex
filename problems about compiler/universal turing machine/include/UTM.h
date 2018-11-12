@@ -12,6 +12,7 @@
 #include <iostream>
 #include <functional>
 #include <unordered_map>
+#include <stdexcept>
 
 using namespace std;
 
