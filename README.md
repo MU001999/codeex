@@ -1,5 +1,5 @@
 # codeex
-record the interesting programming exercises encountered
+Record the interesting programming exercises encountered.
 
 ## INTERESTING PROBLEMS
 * [My smallest code interpreter (aka Brainf**k)](https://www.codewars.com/kata/my-smallest-code-interpreter-aka-brainf-star-star-k/cpp)
