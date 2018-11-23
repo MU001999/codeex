@@ -34,9 +34,10 @@
 
 ### BACKTRACKING
 * [Letter Combinations of a Phone Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Letter%20Combinations%20of%20a%20Phone%20Number.cpp)
+* [Generate Parentheses](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Generate%20Parentheses.cpp)
 
 ### MATH
-* [Fizz Buzz](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fizz%20Buzz)
+* [Fizz Buzz](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fizz%20Buzz.cpp)
 * [Power of Three](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Power%20of%20Three.cpp)
 
 ### OTHER
