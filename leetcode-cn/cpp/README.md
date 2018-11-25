@@ -41,6 +41,7 @@
 * [Power of Three](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Power%20of%20Three.cpp)
 * [Happy Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Happy%20Number.cpp)
 * [Pow(x, n)](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Pow(x%2C%20n).cpp)
+* [Factorial Trailing Zeroes](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Factorial%20Trailing%20Zeroes.cpp)
 
 ### OTHER
 * [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
