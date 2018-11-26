@@ -42,7 +42,8 @@
 * [Happy Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Happy%20Number.cpp)
 * [Pow(x, n)](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Pow(x%2C%20n).cpp)
 * [Factorial Trailing Zeroes](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Factorial%20Trailing%20Zeroes.cpp)
-* [Excel Sheet Column Number](https://leetcode-cn.com/problems/excel-sheet-column-number/)
+* [Excel Sheet Column Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Excel%20Sheet%20Column%20Number.cpp)
+* [Sum of Two Integers](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Sum%20of%20Two%20Integers.cpp)
 
 ### OTHER
 * [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
