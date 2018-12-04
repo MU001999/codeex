@@ -1,5 +1,4 @@
 #include <queue>
-#include <tuple>
 #include <vector>
 #include <bitset>
 #include <string>
@@ -8,7 +7,6 @@
 #include <iterator>
 #include <iostream>
 #include <functional>
-#include <unordered_map>
 
 #define N     24
 #define K     3
@@ -56,7 +54,7 @@ std::vector<std::pair<int, std::string>> rawInfo = {
     {37, "23"}
 };
 
-std::unordered_map<int, std::unordered_map<int, int>> scores;
+std::vector<std::vector<int>> scores(N, std::vector<int>(N, 0));
 
 std::vector<int> scoreG;
 
