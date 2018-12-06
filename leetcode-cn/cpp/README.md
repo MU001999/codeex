@@ -46,6 +46,7 @@
 * [Factorial Trailing Zeroes](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Factorial%20Trailing%20Zeroes.cpp)
 * [Excel Sheet Column Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Excel%20Sheet%20Column%20Number.cpp)
 * [Sum of Two Integers](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Sum%20of%20Two%20Integers.cpp)
+* [Fraction to Recurring Decimal](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fraction%20to%20Recurring%20Decimal.cpp)
 
 ### OTHER
 * [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
