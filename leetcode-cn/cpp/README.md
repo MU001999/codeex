@@ -32,6 +32,7 @@
 * [Best Time to Buy and Sell Stock](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Best%20Time%20to%20Buy%20and%20Sell%20Stock.cpp)
 * [House Robber](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/House%20Robber.cpp)
 * [Unique Paths](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Unique%20Paths.cpp)
+* [Longest Increasing Subsequence](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Longest%20Increasing%20Subsequence.cpp)
 
 ### BACKTRACKING
 * [Letter Combinations of a Phone Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Letter%20Combinations%20of%20a%20Phone%20Number.cpp)
