@@ -66,6 +66,7 @@ void genRawInfoAndScores()
     }
 }
 
+
 void computePosG()
 {
     std::vector<int> grades;
@@ -109,12 +110,14 @@ void computeNoInterference()
     }
 }
 
+
 int computeScore(const std::vector<int> &method)
 {
     auto sum = 0;
     for (auto i: method) sum += scoreG[i];
     return sum;
 }
+
 
 int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> method)
 {
