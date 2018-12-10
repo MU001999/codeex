@@ -13,7 +13,7 @@
 
 #define N     24
 #define K     3
-#define ALPHA 3
+#define ALPHA 1.5
 
 
 struct Method
@@ -72,7 +72,7 @@ void computePosG()
     std::vector<int> grades;
     for (auto info : rawInfo) grades.push_back(info.first);
 
-    int average = std::accumulate(grades.begin(), grades.end(), 0) / N * K;
+    float average = std::accumulate(grades.begin(), grades.end(), 0) / (float)N * K;
 
     auto legal = [=](const int &score) { return (average - ALPHA <= score) && (score <= average + ALPHA); };
 
