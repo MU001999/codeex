@@ -1,1 +1,0 @@
-Soaring in the sky
