@@ -54,3 +54,4 @@
 * [Hamming Distance](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Hamming%20Distance.cpp)
 * [Pascal's Triangle](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Pascal's%20Triangle.cpp)
 * [Valid Parentheses](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Parentheses.cpp)
+* [Implement Queue using Stacks](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Implement%20Queue%20using%20Stacks.cpp)
