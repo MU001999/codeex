@@ -11,6 +11,7 @@
 * [Valid Palindrome](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Palindrome.cpp)
 * [Count and Say](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Count%20and%20Say.cpp)
 * [Group Anagrams](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Group%20Anagrams.cpp)
+* [Decode String](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Decode%20String.cpp)
 
 ### LINKED LIST
 * [Delete Node in a Linked List](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Delete%20Node%20in%20a%20Linked%20List.cpp)
