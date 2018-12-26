@@ -50,6 +50,9 @@
 * [Sum of Two Integers](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Sum%20of%20Two%20Integers.cpp)
 * [Fraction to Recurring Decimal](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Fraction%20to%20Recurring%20Decimal.cpp)
 
+### HASH TABLE
+* [N-Repeated Element in Size 2N Array](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/N-Repeated%20Element%20in%20Size%202N%20Array.cpp)
+
 ### OTHER
 * [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
 * [Hamming Distance](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Hamming%20Distance.cpp)
