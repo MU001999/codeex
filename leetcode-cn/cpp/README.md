@@ -6,6 +6,7 @@
 * [Two Sum](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Two%20Sum.cpp)
 * [Find the Duplicate Number](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Find%20the%20Duplicate%20Number.cpp)
 * [Largest Number At Least Twice of Others](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Largest%20Number%20At%20Least%20Twice%20of%20Others.cpp)
+* [Two Sum II - Input array is sorted](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Two%20Sum%20II%20-%20Input%20array%20is%20sorted.cpp)
 
 ### STRINGS
 * [Valid Anagram](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Anagram.cpp)
