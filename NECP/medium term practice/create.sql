@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS `header`;
 CREATE TABLE `header` (
   `requestid` smallint(5) NOT NULL,
   `key` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
+  `value` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  foreign key fk_requestid(requestid) references request(requestid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -46,7 +47,7 @@ DROP TABLE IF EXISTS `request`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `request` (
-  `requestid` smallint(5) NOT NULL AUTO_INCREMENT,
+  `requestid` smallint(5) NOT NULL,
   `clientip` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `host` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`requestid`)
