@@ -217,21 +217,30 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	switch(ip->ip_p) {
 		case IPPROTO_TCP:
 			printf("   Protocol: TCP\n");
-			break;
+			goto tcp_print;
 		case IPPROTO_UDP:
 			printf("   Protocol: UDP\n");
-			return;
+			break;
 		case IPPROTO_ICMP:
 			printf("   Protocol: ICMP\n");
-			return;
+			break;
 		case IPPROTO_IP:
 			printf("   Protocol: IP\n");
-			return;
+			break;
 		default:
 			printf("   Protocol: unknown\n");
-			return;
+			break;
 	}
 
+	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip);
+	size_payload = ntohs(ip->ip_len) - size_ip;
+	if (size_payload > 0) {
+		printf("   Payload (%d bytes):\n", size_payload);
+		print_payload(payload, size_payload);
+	}
+return;
+
+tcp_print:
 	/*
 	 *  OK, this packet is TCP.
 	 */
@@ -273,7 +282,7 @@ int main(int argc, char **argv)
 	char errbuf[PCAP_ERRBUF_SIZE];		/* error buffer */
 	pcap_t *handle;				/* packet capture handle */
 
-	char filter_exp[] = "tcp";		/* filter expression [3] */
+	char filter_exp[] = "tcp and dst host 172.23.98.224";		/* filter expression */
 	struct bpf_program fp;			/* compiled filter program (expression) */
 	bpf_u_int32 mask;			/* subnet mask */
 	bpf_u_int32 net;			/* ip */
