@@ -1,145 +1,138 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>TimeClientECharts</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <h1 style="text-align: center;">Hosts Counts</h1>
-</head>
-<body>
+{% extends "layout.html" %} {% block body %}
+
+<h1 style="text-align: center;">按HTTP HOST访问次数排序</h1>
 <div class="row">
 	<div class="col-md-12">
-		    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-	    <div id="main" style="height:400px"></div>
-	    <!-- ECharts单文件引入 -->
-	    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-	    <script type="text/javascript">
-	        // 路径配置
-	        require.config({
-	            paths: {
-	                echarts: 'http://echarts.baidu.com/build/dist'
-	            }
-	        });
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="height:400px"></div>
+		<!-- ECharts单文件引入 -->
+		<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+		<script type="text/javascript">
+			// 路径配置
+			require.config({
+				paths: {
+					echarts: 'http://echarts.baidu.com/build/dist'
+				}
+			});
 
-	        // 使用
-	        require(
-	            [
-	                'echarts',
-	                'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
-	            ],
-	            function (ec) {
-	                // 基于准备好的dom，初始化echarts图表
-	                var myChart = ec.init(document.getElementById('main'));
+			// 使用
+			require(
+				[
+					'echarts',
+					'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+				],
+				function (ec) {
+					// 基于准备好的dom，初始化echarts图表
+					var myChart = ec.init(document.getElementById('main'));
 
-	                var option = {
-	                    tooltip: {
-	                        show: true
-	                    },
-	                    legend: {
-	                        data:['times']
-	                    },
-	                    xAxis : [
-	                        {
-	                            type : 'category',
-	                            data : [
-                                {% for host in by_times_host %}
+					var option = {
+						tooltip: {
+							show: true
+						},
+						legend: {
+							data: ['times']
+						},
+						xAxis: [
+							{
+								type: 'category',
+								data: [
+									{% for host in by_times_host %}
                                     "{{ host }}",
-                                {% endfor %}
+							{% endfor %}
                                 ]
-	                        }
+				}
 	                    ],
-	                    yAxis : [
-	                        {
-	                            type : 'value'
-	                        }
-	                    ],
-	                    series : [
-	                        {
-	                            "name":"times",
-	                            "type":"bar",
-	                            "data": [
-                                {% for cnt in by_times_cnt %}
+				yAxis : [
+					{
+						type: 'value'
+					}
+				],
+				series : [
+					{
+						"name": "times",
+						"type": "bar",
+						"data": [
+							{% for cnt in by_times_cnt %}
                                     {{ cnt }},
-                                {% endfor %}
-                                ]
+					{% endfor %}
+				]
 	                        }
 	                    ]
 	                };
 
-	                // 为echarts对象加载数据
-	                myChart.setOption(option);
+			// 为echarts对象加载数据
+			myChart.setOption(option);
 	            }
 	        );
-	    </script>
-    </div>
-    </div>
-    <div class="row">
+		</script>
+	</div>
+</div>
+<h1 style="text-align: center;">按HTTP HOST访问客户机排序</h1>
+<div class="row">
 	<div class="col-md-12">
 		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-	    <div id="main2" style="height:400px"></div>
-	    <!-- ECharts单文件引入 -->
-	    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-	    <script type="text/javascript">
-	        // 路径配置
-	        require.config({
-	            paths: {
-	                echarts: 'http://echarts.baidu.com/build/dist'
-	            }
-	        });
+		<div id="main2" style="height:400px"></div>
+		<!-- ECharts单文件引入 -->
+		<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+		<script type="text/javascript">
+			// 路径配置
+			require.config({
+				paths: {
+					echarts: 'http://echarts.baidu.com/build/dist'
+				}
+			});
 
-	        // 使用
-	        require(
-	            [
-	                'echarts',
-	                'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
-	            ],
-	            function (ec) {
-	                // 基于准备好的dom，初始化echarts图表
-	                var myChart = ec.init(document.getElementById('main2'));
+			// 使用
+			require(
+				[
+					'echarts',
+					'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+				],
+				function (ec) {
+					// 基于准备好的dom，初始化echarts图表
+					var myChart = ec.init(document.getElementById('main2'));
 
-	                var option = {
-	                    tooltip: {
-	                        show: true
-	                    },
-	                    legend: {
-	                        data:['clients']
-	                    },
-	                    xAxis : [
-	                        {
-	                            type : 'category',
-	                            data : [
-                                {% for host in by_client_host %}
+					var option = {
+						tooltip: {
+							show: true
+						},
+						legend: {
+							data: ['clients']
+						},
+						xAxis: [
+							{
+								type: 'category',
+								data: [
+									{% for host in by_client_host %}
                                     "{{ host }}",
-                                {% endfor %}
+							{% endfor %}
                                 ]
-	                        }
+				}
 	                    ],
-	                    yAxis : [
-	                        {
-	                            type : 'value'
-	                        }
-	                    ],
-	                    series : [
-	                        {
-	                            "name":"clients",
-	                            "type":"bar",
-	                            "data": [
-                                {% for cnt in by_client_cnt %}
+				yAxis : [
+					{
+						type: 'value'
+					}
+				],
+				series : [
+					{
+						"name": "clients",
+						"type": "bar",
+						"data": [
+							{% for cnt in by_client_cnt %}
                                     {{ cnt }},
-                                {% endfor %}
-                                ]
+					{% endfor %}
+				]
 	                        }
 	                    ]
 	                };
 
-	                // 为echarts对象加载数据
-	                myChart.setOption(option);
+			// 为echarts对象加载数据
+			myChart.setOption(option);
 	            }
 	        );
-	    </script>
-</div>
+		</script>
 	</div>
 </div>
 
-</body>
-</html>
+{% endblock %}
