@@ -59,10 +59,23 @@ def get_client(clientip):
     for request in Request.where(clientip=clientip).select():
         hostcnt[request.host] += 1
 
-    hosts = sorted(hostcnt.keys(), key=lambda k: hostcnt[k])[-1:-4:-1]
-    times = sorted(hostcnt.values())[-1:-4:-1]
+    hosts = sorted(hostcnt.keys(), key=lambda k: hostcnt[k])[-1:-11:-1]
+    times = sorted(hostcnt.values())[-1:-11:-1]
 
-    return render_template('client.html', hosts=hosts, times=times)
+    return render_template('client.html', clientip=clientip, hosts=hosts, cnts=zip(hosts, times))
+
+
+@app.route('/host/<hostname>')
+def get_host(hostname):
+    clientcnt = defaultdict(int)
+
+    for request in Request.where(host=hostname).select():
+        clientcnt[request.clientip] += 1
+
+    clients = sorted(clientcnt.keys(), key=lambda k: clientcnt[k])[-1:-11:-1]
+    times = sorted(clientcnt.values())[-1:-11:-1]
+
+    return render_template('host.html', hostname=hostname, clients=clients, cnts=zip(clients, times))
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1')
+    app.run(host='0.0.0.0')
