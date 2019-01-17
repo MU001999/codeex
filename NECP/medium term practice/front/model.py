@@ -15,7 +15,10 @@ class Request(Model):
     requestid = Field()
     clientip = Field()
     host = Field()
+    url = Field()
+    urlhash = Field()
     ctime = Field()
+
 
 class Header(Model):
     table = 'header'
