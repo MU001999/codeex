@@ -8,6 +8,7 @@
 				<th>request id</th>
 				<th>client ip</th>
 				<th>host</th>
+				<th>url</th>
 				<th>crawl time</th>
 			</tr>
 			{% for request in requests %}
@@ -15,7 +16,8 @@
 			<tr>
 				<td onclick="location.href='/header/{{ request.requestid }}'">{{ request.requestid }}</td>
 				<td onclick="location.href='/client/{{ request.clientip }}'">{{ request.clientip }}</td>
-				<td>{{ request.host }}</td>
+				<td onclick="location.href='/host/{{ request.host }}'">{{ request.host }}</td>
+				<td>{{ request.url }}</td>
 				<td>{{ request.ctime }}</td>
 			</tr>
 
