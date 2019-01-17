@@ -182,7 +182,7 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	/* compute tcp payload (segment) size */
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 
-	if (size_payload <= 60) return;
+	if (size_payload < 20) return;
 
 	Request request = Request(count, inet_ntoa(ip->ip_src), payload);
 
