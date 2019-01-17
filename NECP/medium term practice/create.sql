@@ -26,7 +26,8 @@ CREATE TABLE `header` (
   `requestid` smallint(5) NOT NULL,
   `header_key` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `header_value` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  foreign key fk_requestid(requestid) references request(requestid)
+  KEY `fk_requestid` (`requestid`),
+  CONSTRAINT `fk_requestid` FOREIGN KEY (`requestid`) REFERENCES `request` (`requestid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,6 +51,7 @@ CREATE TABLE `request` (
   `requestid` smallint(5) NOT NULL,
   `clientip` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `host` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ctime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`requestid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,4 +74,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-14 19:09:44
+-- Dump completed on 2019-01-17  9:43:10
