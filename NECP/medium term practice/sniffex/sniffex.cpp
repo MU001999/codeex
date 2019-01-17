@@ -39,7 +39,7 @@ struct Request
 		std::getline(ss, tmp);
 		while (std::getline(ss, tmp) && tmp != "\r")
 		{
-			tmp.pop_back();
+			tmp = tmp.substr(0, tmp.size() - 1);
 			size_t pos = tmp.find(':');
 			if (pos != tmp.npos)
 			{
