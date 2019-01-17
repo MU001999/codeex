@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-md-12">
         <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-        <div id="main" style="height:400px"></div>
+        <div id="main" style="height:800px"></div>
         <!-- ECharts单文件引入 -->
         <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
         <script type="text/javascript">
@@ -19,47 +19,49 @@
             require(
                 [
                     'echarts',
-                    'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                    'echarts/chart/pie'
                 ],
                 function (ec) {
                     // 基于准备好的dom，初始化echarts图表
                     var myChart = ec.init(document.getElementById('main'));
 
-                    var option = {
+                    option = {
+                        title: {
+                            text: '{{ clientip }}',
+                            subtext: '客户机ip',
+                            x: 'center'
+                        },
                         tooltip: {
-                            show: true
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
                         },
                         legend: {
-                            data: ['request times']
-                        },
-                        xAxis: [
-                            {
-                                type: 'category',
-                                data: [
-                                    {% for host in hosts %}
-                                        "{{ host }}",
+                            x: 'center',
+                            y: 'bottom',
+                            data: [
+                                {% for host in hosts %}
+                                "{{ host }}",
                             {% endfor %}
-                                ]
-                }
-                        ],
-                yAxis : [
+                            ]
+                },
+                calculable: true,
+                series: [
                     {
-                        type: 'value'
-                    }
-                ],
-                series : [
-                    {
-                        "name": "request times",
-                        "type": "bar",
-                        "data": [
-                            {% for time in times %}
-                                        {{ time }},
+                        name: '访问次数',
+                        type: 'pie',
+                        radius: [100, 300],
+                        roseType: 'area',
+                        x: '50%',               // for funnel
+                        max: 40,                // for funnel
+                        sort: 'ascending',     // for funnel
+                        data: [
+                            {% for cnt in cnts %}
+                            { value: '{{ cnt[1] }}', name: '{{ cnt[0] }}' },
                     {% endfor %}
                 ]
-                            }
-                        ]
+                    }
+                ]
                     };
-
             // 为echarts对象加载数据
             myChart.setOption(option);
                 }
