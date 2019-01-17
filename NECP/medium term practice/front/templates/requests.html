@@ -1,19 +1,22 @@
 {% extends "layout.html" %} {% block body %}
 
+<h1 class="text-center">所有的请求抓包</h1>
 <div class="row">
 	<div class="col-md-12">
 		<table class="table table-striped">
 			<tr>
-				<th>request_id</th>
-				<th>client_ip</th>
+				<th>request id</th>
+				<th>client ip</th>
 				<th>host</th>
+				<th>crawl time</th>
 			</tr>
 			{% for request in requests %}
 
 			<tr>
 				<td onclick="location.href='/header/{{ request.requestid }}'">{{ request.requestid }}</td>
-				<td>{{ request.clientip }}</td>
+				<td onclick="location.href='/client/{{ request.clientip }}'">{{ request.clientip }}</td>
 				<td>{{ request.host }}</td>
+				<td>{{ request.ctime }}</td>
 			</tr>
 
 			{% endfor %}
