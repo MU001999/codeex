@@ -146,12 +146,6 @@ struct sniff_tcp {
 };
 
 void
-got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
-
-/*
- * dissect/print packet
- */
-void
 got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 	static int count = 1;                   /* packet counter */
@@ -189,6 +183,8 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 
 	if (size_payload <= 20) return;
+
+	// to resolve 字节序问题
 
 	auto request = Request(count, inet_ntoa(ip->ip_src), payload);
 
