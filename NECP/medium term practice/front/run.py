@@ -59,7 +59,7 @@ def get_client(clientip):
     for request in Request.where(clientip=clientip).select():
         hostcnt[request.host] += 1
 
-    hosts = sorted(hostcnt.keys(), lambda k: hostcnt[k])[-1:-4:-1]
+    hosts = sorted(hostcnt.keys(), key=lambda k: hostcnt[k])[-1:-4:-1]
     times = sorted(hostcnt.values())[-1:-4:-1]
 
     return render_template('client.html', hosts=hosts, times=times)
