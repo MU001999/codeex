@@ -52,5 +52,17 @@ def get_sort_clinet():
 
     return render_template('clientsort.html', clients=clients, cnts=cnts)
 
+@app.route('/client/<clientip>')
+def get_client(clientip):
+    hostcnt = defaultdict(int)
+
+    for request in Request.where(clientip=clientip).select():
+        hostcnt[request.host] += 1
+
+    hosts = sorted(hostcnt.keys(), lambda k: hostcnt[k])[-1:-4:-1]
+    times = sorted(hostcnt.values())[-1:-4:-1]
+
+    return render_template('client.html', hosts=hosts, times=times)
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1')
