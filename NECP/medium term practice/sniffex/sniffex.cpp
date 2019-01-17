@@ -1,13 +1,89 @@
+#include <string>
+#include <sstream>
+#include <utility>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+
+
 #include <pcap.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
+#include <mysql/mysql.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+
+struct Request
+{
+	int requestid;
+	std::string clientip;
+	std::string host;
+
+	std::unordered_map<std::string, std::string> headers;
+
+	Request(int requestid, const std::string &clientip, const std::string &data): requestid(requestid), clientip(clientip)
+	{
+		std::cout << data << std::endl;
+		if (data.empty()) return;
+
+		std::stringstream ss(data);
+		std::string tmp;
+
+		std::getline(ss, tmp);
+		while (std::getline(ss, tmp) && tmp != "\r")
+		{
+			tmp.pop_back();
+			auto pos = tmp.find(':');
+			if (pos != tmp.npos)
+			{
+				auto k = tmp.substr(0, pos), v = tmp.substr(pos + 2);
+				headers[k] += v;
+			}
+		}
+
+		if (headers.count("host")) host = headers["host"];
+		else if (headers.count("Host")) host = headers["Host"];
+		else if (headers.count("HOST")) host = headers["HOST"];
+	}
+
+	~Request() = default;
+};
+
+int insert2db(Request &request)
+{
+    MYSQL mysql;
+
+    MYSQL_RES *rea;
+    MYSQL_ROW row;
+
+    int flag;
+
+    char query[4096];
+
+    mysql_init(&mysql);
+    if (!mysql_real_connect(&mysql, "localhost", "mysql", "mysql", "pcaps", 0, NULL, 0)) return -1;
+
+    sprintf(query, "insert into request (requestid, clientip, host) values (%d, '%s', '%s')", request.requestid, request.clientip.c_str(), request.host.c_str());
+    if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
+
+
+    for (auto &header: request.headers)
+    {
+        sprintf(query, "insert into header (requestid, header_key, header_value) values (%d, '%s', '%s')", request.requestid, header.first.c_str(), header.second.c_str());
+        if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
+    }
+
+    mysql_close(&mysql);
+
+    return 0;
+}
+
 
 /* default snap length (maximum bytes per packet to capture) */
 #define SNAP_LEN 1000
@@ -72,118 +148,14 @@ struct sniff_tcp {
 void
 got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
-void
-print_payload(const u_char *payload, int len);
-
-void
-print_hex_ascii_line(const u_char *payload, int len, int offset);
-
-/*
- * print data in rows of 16 bytes: offset   hex   ascii
- *
- * 00000   47 45 54 20 2f 20 48 54  54 50 2f 31 2e 31 0d 0a   GET / HTTP/1.1..
- */
-void
-print_hex_ascii_line(const u_char *payload, int len, int offset)
-{
-
-	int i;
-	int gap;
-	const u_char *ch;
-
-	/* offset */
-	printf("%05d   ", offset);
-
-	/* hex */
-	ch = payload;
-	for(i = 0; i < len; i++) {
-		printf("%02x ", *ch);
-		ch++;
-		/* print extra space after 8th byte for visual aid */
-		if (i == 7)
-			printf(" ");
-	}
-	/* print space to handle line less than 8 bytes */
-	if (len < 8)
-		printf(" ");
-
-	/* fill hex gap with spaces if not full line */
-	if (len < 16) {
-		gap = 16 - len;
-		for (i = 0; i < gap; i++) {
-			printf("   ");
-		}
-	}
-	printf("   ");
-
-	/* ascii (if printable) */
-	ch = payload;
-	for(i = 0; i < len; i++) {
-		if (isprint(*ch))
-			printf("%c", *ch);
-		else
-			printf(".");
-		ch++;
-	}
-
-	printf("\n");
-
-return;
-}
-
-/*
- * print packet payload data (avoid printing binary data)
- */
-void
-print_payload(const u_char *payload, int len)
-{
-
-	int len_rem = len;
-	int line_width = 16;			/* number of bytes per line */
-	int line_len;
-	int offset = 0;					/* zero-based offset counter */
-	const u_char *ch = payload;
-
-	if (len <= 0)
-		return;
-
-	/* data fits on one line */
-	if (len <= line_width) {
-		print_hex_ascii_line(ch, len, offset);
-		return;
-	}
-
-	/* data spans multiple lines */
-	for ( ;; ) {
-		/* compute current line length */
-		line_len = line_width % len_rem;
-		/* print line */
-		print_hex_ascii_line(ch, line_len, offset);
-		/* compute total remaining */
-		len_rem = len_rem - line_len;
-		/* shift pointer to remaining bytes to print */
-		ch = ch + line_len;
-		/* add offset */
-		offset = offset + line_width;
-		/* check if we have line width chars or less */
-		if (len_rem <= line_width) {
-			/* print last line and get out */
-			print_hex_ascii_line(ch, len_rem, offset);
-			break;
-		}
-	}
-
-return;
-}
-
 /*
  * dissect/print packet
  */
 void
 got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
-
 	static int count = 1;                   /* packet counter */
+	if (count > 500) exit(0);
 
 	/* declare pointers to packet headers */
 	const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
@@ -195,84 +167,34 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	int size_tcp;
 	int size_payload;
 
-	printf("\nPacket number %d:\n", count);
-	count++;
-
 	/* define ethernet header */
 	ethernet = (struct sniff_ethernet*)(packet);
 
 	/* define/compute ip header offset */
 	ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
-	size_ip = IP_HL(ip)*4;
-	if (size_ip < 20) {
-		printf("   * Invalid IP header length: %u bytes\n", size_ip);
-		return;
-	}
-
-	/* print source and destination IP addresses */
-	printf("       From: %s\n", inet_ntoa(ip->ip_src));
-	printf("         To: %s\n", inet_ntoa(ip->ip_dst));
+	size_ip = IP_HL(ip) * 4;
+	if (size_ip < 20) return;
 
 	/* determine protocol */
-	switch(ip->ip_p) {
-		case IPPROTO_TCP:
-			printf("   Protocol: TCP\n");
-			goto tcp_print;
-		case IPPROTO_UDP:
-			printf("   Protocol: UDP\n");
-			break;
-		case IPPROTO_ICMP:
-			printf("   Protocol: ICMP\n");
-			break;
-		case IPPROTO_IP:
-			printf("   Protocol: IP\n");
-			break;
-		default:
-			printf("   Protocol: unknown\n");
-			break;
-	}
+	if (ip->ip_p != IPPROTO_TCP) return;
 
-	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip);
-	size_payload = ntohs(ip->ip_len) - size_ip;
-	if (size_payload > 0) {
-		printf("   Payload (%d bytes):\n", size_payload);
-		print_payload(payload, size_payload);
-	}
-return;
-
-tcp_print:
-	/*
-	 *  OK, this packet is TCP.
-	 */
-
-	/* define/compute tcp header offset */
 	tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
-	size_tcp = TH_OFF(tcp)*4;
-	if (size_tcp < 20) {
-		printf("   * Invalid TCP header length: %u bytes\n", size_tcp);
-		return;
-	}
-
-	printf("   Src port: %d\n", ntohs(tcp->th_sport));
-	printf("   Dst port: %d\n", ntohs(tcp->th_dport));
+	size_tcp = TH_OFF(tcp) * 4;
+	if (size_tcp < 20) return;
 
 	/* define/compute tcp payload (segment) offset */
-	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
+	payload = (char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 
 	/* compute tcp payload (segment) size */
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 
-	/*
-	 * Print payload data; it might be binary, so don't just
-	 * treat it as a string.
-	 */
+	if (size_payload <= 20) return;
 
-	if (size_payload > 0) {
-		printf("   Payload (%d bytes):\n", size_payload);
-		print_payload(payload, size_payload);
-	}
+	auto request = Request(count, inet_ntoa(ip->ip_src), payload);
 
-return;
+	if (insert2db(request) == 0) ++count;
+
+	return;
 }
 
 int main(int argc, char **argv)
@@ -286,7 +208,6 @@ int main(int argc, char **argv)
 	struct bpf_program fp;			/* compiled filter program (expression) */
 	bpf_u_int32 mask;			/* subnet mask */
 	bpf_u_int32 net;			/* ip */
-	int num_packets = 500;			/* number of packets to capture */
 
 	/* check for capture device name on command-line */
 	if (argc == 2) {
@@ -316,7 +237,6 @@ int main(int argc, char **argv)
 
 	/* print capture info */
 	printf("Device: %s\n", dev);
-	printf("Number of packets: %d\n", num_packets);
 	printf("Filter expression: %s\n", filter_exp);
 
 	/* open capture device */
@@ -347,7 +267,7 @@ int main(int argc, char **argv)
 	}
 
 	/* now we can set our callback function */
-	pcap_loop(handle, num_packets, got_packet, NULL);
+	pcap_loop(handle, -1, got_packet, NULL);
 
 	/* cleanup */
 	pcap_freecode(&fp);
