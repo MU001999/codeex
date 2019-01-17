@@ -202,9 +202,11 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 
 int main(int argc, char **argv)
 {
-	if (daemon(0, 0) == -1) return 0;
+	freopen("/dev/null", "r", stdin);
+	freopen("./logfile", "w", stdout);
+	freopen("/dev/null", "w", stderr);
 
-	freopen("/home/mu00/Repos/codeex/NECP/medium term practice/sniffex/logfile", "w", stdout);
+	if (daemon(0, 1) == -1) return 0;
 
 	char *dev = NULL;			/* capture device name */
 	char errbuf[PCAP_ERRBUF_SIZE];		/* error buffer */
