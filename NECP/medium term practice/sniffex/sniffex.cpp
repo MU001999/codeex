@@ -1,22 +1,24 @@
+#include <map>
 #include <string>
 #include <sstream>
 #include <utility>
+#include <iterator>
 #include <iostream>
 #include <algorithm>
-#include <unordered_map>
 
 
 #include <pcap.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
-#include <mysql/mysql.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <mysql/mysql.h>
 
 
 struct Request
@@ -25,11 +27,10 @@ struct Request
 	std::string clientip;
 	std::string host;
 
-	std::unordered_map<std::string, std::string> headers;
+	std::map<std::string, std::string> headers;
 
 	Request(int requestid, const std::string &clientip, const std::string &data): requestid(requestid), clientip(clientip)
 	{
-		std::cout << data << std::endl;
 		if (data.empty()) return;
 
 		std::stringstream ss(data);
@@ -39,10 +40,10 @@ struct Request
 		while (std::getline(ss, tmp) && tmp != "\r")
 		{
 			tmp.pop_back();
-			auto pos = tmp.find(':');
+			size_t pos = tmp.find(':');
 			if (pos != tmp.npos)
 			{
-				auto k = tmp.substr(0, pos), v = tmp.substr(pos + 2);
+				std::string k = tmp.substr(0, pos), v = tmp.substr(pos + 2);
 				headers[k] += v;
 			}
 		}
@@ -52,7 +53,7 @@ struct Request
 		else if (headers.count("HOST")) host = headers["HOST"];
 	}
 
-	~Request() = default;
+	~Request() {}
 };
 
 int insert2db(Request &request)
@@ -72,10 +73,9 @@ int insert2db(Request &request)
     sprintf(query, "insert into request (requestid, clientip, host) values (%d, '%s', '%s')", request.requestid, request.clientip.c_str(), request.host.c_str());
     if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
 
-
-    for (auto &header: request.headers)
+    for (std::map<std::string, std::string>::iterator it = request.headers.begin(); it != request.headers.end(); ++it)
     {
-        sprintf(query, "insert into header (requestid, header_key, header_value) values (%d, '%s', '%s')", request.requestid, header.first.c_str(), header.second.c_str());
+        sprintf(query, "insert into header (requestid, header_key, header_value) values (%d, '%s', '%s')", request.requestid, it->first.c_str(), it->second.c_str());
         if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
     }
 
@@ -155,7 +155,7 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
 	const struct sniff_ip *ip;              /* The IP header */
 	const struct sniff_tcp *tcp;            /* The TCP header */
-	const char *payload;                    /* Packet payload */
+	char *payload;                    /* Packet payload */
 
 	int size_ip;
 	int size_tcp;
@@ -182,19 +182,29 @@ got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 	/* compute tcp payload (segment) size */
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 
-	if (size_payload <= 20) return;
+	if (size_payload <= 60) return;
 
-	// to resolve 字节序问题
+	Request request = Request(count, inet_ntoa(ip->ip_src), payload);
 
-	auto request = Request(count, inet_ntoa(ip->ip_src), payload);
+	if (request.host.empty() || insert2db(request) == -1) return;
 
-	if (insert2db(request) == 0) ++count;
+	printf("\nPacket number %d:\n", count);
+	printf("       From: %s\n", inet_ntoa(ip->ip_src));
+	printf("         To: %s\n", inet_ntoa(ip->ip_dst));
+	printf("   Protocol: TCP\n");
+	printf("   Src port: %d\n", ntohs(tcp->th_sport));
+	printf("   Dst port: %d\n", ntohs(tcp->th_dport));
+
+	++count;
 
 	return;
 }
 
 int main(int argc, char **argv)
 {
+	if (daemon(0, 0) == -1) return 0;
+
+	freopen("/home/mu00/Repos/codeex/NECP/medium term practice/sniffex/logfile", "w", stdout);
 
 	char *dev = NULL;			/* capture device name */
 	char errbuf[PCAP_ERRBUF_SIZE];		/* error buffer */
