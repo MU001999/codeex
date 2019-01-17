@@ -1,0 +1,73 @@
+{% extends "layout.html" %} {% block body %}
+
+<h1 class="text-center">访问目标主机的客户机</h1>
+<div class="row">
+    <div class="col-md-12">
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="main" style="height:800px"></div>
+        <!-- ECharts单文件引入 -->
+        <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+        <script type="text/javascript">
+            // 路径配置
+            require.config({
+                paths: {
+                    echarts: 'http://echarts.baidu.com/build/dist'
+                }
+            });
+
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/pie'
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('main'));
+
+                    option = {
+                        title: {
+                            text: '{{ hostname }}',
+                            subtext: 'hostname',
+                            x: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            x: 'center',
+                            y: 'bottom',
+                            data: [
+                                {% for client in clients %}
+                                "{{ client }}",
+                            {% endfor %}
+                            ]
+                },
+                calculable: true,
+                series: [
+                    {
+                        name: '访问次数',
+                        type: 'pie',
+                        radius: [100, 300],
+                        roseType: 'area',
+                        x: '50%',               // for funnel
+                        max: 40,                // for funnel
+                        sort: 'ascending',     // for funnel
+                        data: [
+                            {% for cnt in cnts %}
+                            { value: '{{ cnt[1] }}', name: '{{ cnt[0] }}' },
+                    {% endfor %}
+                ]
+                    }
+                ]
+                    };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+                }
+            );
+        </script>
+    </div>
+</div>
+
+{% endblock %}
