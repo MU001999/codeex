@@ -26,6 +26,7 @@ struct Request
 	int requestid;
 	std::string clientip;
 	std::string host;
+	std::string url;
 
 	std::map<std::string, std::string> headers;
 
@@ -36,7 +37,7 @@ struct Request
 		std::stringstream ss(data);
 		std::string tmp;
 
-		std::getline(ss, tmp);
+		ss >> tmp; ss >> url; std::getline(ss, tmp);
 		while (std::getline(ss, tmp) && tmp != "\r")
 		{
 			tmp = tmp.substr(0, tmp.size() - 1);
@@ -70,7 +71,7 @@ int insert2db(Request &request)
     mysql_init(&mysql);
     if (!mysql_real_connect(&mysql, "localhost", "mysql", "mysql", "pcaps", 0, NULL, 0)) return -1;
 
-    sprintf(query, "insert into request (requestid, clientip, host) values (%d, '%s', '%s')", request.requestid, request.clientip.c_str(), request.host.c_str());
+    sprintf(query, "insert into request (requestid, clientip, host, url, urlhash) values (%d, '%s', '%s', '%s', MD5('%s'))", request.requestid, request.clientip.c_str(), request.host.c_str(), request.url.c_str(), request.url.c_str());
     if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
 
     for (std::map<std::string, std::string>::iterator it = request.headers.begin(); it != request.headers.end(); ++it)
