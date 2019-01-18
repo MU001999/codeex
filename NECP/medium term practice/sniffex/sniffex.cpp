@@ -71,7 +71,7 @@ int insert2db(Request &request)
     mysql_init(&mysql);
     if (!mysql_real_connect(&mysql, "localhost", "mysql", "mysql", "pcaps", 0, NULL, 0)) return -1;
 
-    sprintf(query, "insert into request (requestid, clientip, host, url, urlhash) values (%d, '%s', '%s', '%s', MD5('%s'))", request.requestid, request.clientip.c_str(), request.host.c_str(), request.url.c_str(), request.url.c_str());
+    sprintf(query, "insert into request (clientip, host, url, urlhash) values ('%s', '%s', '%s', MD5('%s'))", request.clientip.c_str(), request.host.c_str(), request.url.c_str(), request.url.c_str());
     if (mysql_real_query(&mysql, query, (unsigned int)strlen(query))) return -1;
 
     for (std::map<std::string, std::string>::iterator it = request.headers.begin(); it != request.headers.end(); ++it)
@@ -150,7 +150,7 @@ void
 got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 	static int count = 1;                   /* packet counter */
-	if (count > 500) exit(0);
+	if (count > 5000) exit(0);
 
 	/* declare pointers to packet headers */
 	const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
@@ -213,7 +213,7 @@ int main(int argc, char **argv)
 	char errbuf[PCAP_ERRBUF_SIZE];		/* error buffer */
 	pcap_t *handle;				/* packet capture handle */
 
-	char filter_exp[] = "tcp and not host 211.71.149.243 and dst port 80 or 443";		/* filter expression */
+	char filter_exp[] = "tcp and dst port 80 or 443";		/* filter expression */
 	struct bpf_program fp;			/* compiled filter program (expression) */
 	bpf_u_int32 mask;			/* subnet mask */
 	bpf_u_int32 net;			/* ip */
