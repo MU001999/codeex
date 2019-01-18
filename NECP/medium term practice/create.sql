@@ -1,6 +1,6 @@
 -- MySQL dump 10.16  Distrib 10.1.37-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: pcaps
+-- Host: localhost    Database: test3
 -- ------------------------------------------------------
 -- Server version	10.1.37-MariaDB
 
@@ -23,9 +23,11 @@ DROP TABLE IF EXISTS `header`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `header` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `requestid` smallint(5) NOT NULL,
   `header_key` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `header_value` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `fk_requestid` (`requestid`),
   CONSTRAINT `fk_requestid` FOREIGN KEY (`requestid`) REFERENCES `request` (`requestid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -48,9 +50,11 @@ DROP TABLE IF EXISTS `request`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `request` (
-  `requestid` smallint(5) NOT NULL,
+  `requestid` smallint(5) NOT NULL AUTO_INCREMENT,
   `clientip` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `host` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(2000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `urlhash` varchar(33) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ctime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`requestid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -74,4 +78,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-17  9:43:10
+-- Dump completed on 2019-01-18 13:01:56
