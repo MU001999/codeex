@@ -9,6 +9,7 @@
 * [Two Sum II - Input array is sorted](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Two%20Sum%20II%20-%20Input%20array%20is%20sorted.cpp)
 * [Remove Element](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Remove%20Element.cpp)
 * [Spiral Matrix](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Spiral%20Matrix.cpp)
+* [Pascal's Triangle II](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Pascal's%20Triangle%20II.cpp)
 
 ### STRINGS
 * [Valid Anagram](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Anagram.cpp)
