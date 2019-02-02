@@ -59,6 +59,7 @@
 
 ### HASH TABLE
 * [N-Repeated Element in Size 2N Array](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/N-Repeated%20Element%20in%20Size%202N%20Array.cpp)
+* [Intersection of Two Arrays](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Intersection%20of%20Two%20Arrays.cpp)
 
 ### OTHER
 * [Number of 1 Bits](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%201%20Bits.cpp)
