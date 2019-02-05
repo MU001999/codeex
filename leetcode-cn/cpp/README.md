@@ -68,3 +68,4 @@
 * [Valid Parentheses](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Parentheses.cpp)
 * [Implement Queue using Stacks](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Implement%20Queue%20using%20Stacks.cpp)
 * [Implement Stack using Queues](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Implement%20Stack%20using%20Queues.cpp)
+* [Guess Number Higher or Lower](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Guess%20Number%20Higher%20or%20Lower.cpp)
