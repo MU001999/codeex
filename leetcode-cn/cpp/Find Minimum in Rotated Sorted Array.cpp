@@ -9,7 +9,7 @@ private:
     {
         if (left >= right) return nums[left];
         auto mid = (left + right) / 2;
-        if (nums[mid-1] > nums[mid]) return nums[mid];
+        if (mid > 0 && nums[mid-1] > nums[mid]) return nums[mid];
         else if (nums[mid] > nums[right]) return helper(nums, mid + 1, right);
         else return helper(nums, left, mid - 1);
     }
