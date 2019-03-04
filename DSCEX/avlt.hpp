@@ -34,14 +34,20 @@ private:
     using node_reference = avltnode&;
     using const_node_reference = const avltnode&;
 
-    node_pointer root = nullptr;
+    node_pointer p_root = nullptr;
     size_type p_size;
 
     node_pointer p_search(const T& val)
     {
-
+        auto res = p_root;
+        while (res)
+        {
+            if (res->val == val) return res;
+            else res = (res->val < val) ? res->right : res->left;
+        }
+        return res;
     }
-    
+
     size_type p_height()
     {
 
@@ -57,10 +63,10 @@ public:
 
     ~avlt() {}
 
-    
+
     bool empty()
     {
-
+        return p_root;
     }
 
     size_type size()
@@ -88,5 +94,4 @@ public:
     {
 
     }
-
-}
+};
