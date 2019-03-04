@@ -28,6 +28,7 @@ public:
     using pointer = ::std::shared_ptr<T>;
     using const_pointer = ::std::shared_ptr<const T>;
 
+
 private:
     using node_pointer = ::std::shared_ptr<avltnode>;
     using const_node_pointer = ::std::shared_ptr<const avltnode>;
@@ -35,7 +36,7 @@ private:
     using const_node_reference = const avltnode&;
 
     node_pointer p_root = nullptr;
-    size_type p_size;
+    size_type p_size = 0;
 
     node_pointer p_search(const T& val)
     {
@@ -53,12 +54,17 @@ private:
 
     }
 
+    void p_update_height()
+    {
+
+    }
+
 
 public:
     avlt() {}
     avlt(::std::initializer_list<T> l)
     {
-        // ...
+        for (auto &v : l) insert(v);
     }
 
     ~avlt() {}
@@ -77,7 +83,7 @@ public:
 
     void clear()
     {
-
+        p_root = nullptr;
     }
 
     bool search(const T& val)
