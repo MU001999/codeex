@@ -14,6 +14,11 @@ public:
 
     avltnode(T val, ::std::shared_ptr<avltnode> left = nullptr, ::std::shared_ptr<avltnode> = nullptr):
         val(val), height(0), left(left), right(right) {}
+
+    int bf()
+    {
+        return (left ? left->height : 0) - (right ? right->height : 0);
+    }
 };
 
 
@@ -54,7 +59,22 @@ private:
 
     }
 
-    void p_update_height()
+    void left_rotation(node_pointer np)
+    {
+
+    }
+
+    void right_rotation(node_pointer np)
+    {
+
+    }
+
+    void left_right(node_pointer np)
+    {
+
+    }
+
+    void right_left(node_pointer np)
     {
 
     }
@@ -93,7 +113,13 @@ public:
 
     void insert(const T& val)
     {
+        if (!p_root)
+        {
+            p_root = ::std::make_shared<avltnode>(val);
+            return;
+        }
 
+        // ...
     }
 
     void remove(const T& val)
