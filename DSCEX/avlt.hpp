@@ -56,7 +56,7 @@ private:
 
     size_type p_height()
     {
-
+        return p_root ? p_root->height : 0;
     }
 
     void left_rotation(node_pointer np)
