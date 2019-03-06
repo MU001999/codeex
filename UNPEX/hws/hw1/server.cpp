@@ -10,6 +10,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "calculate.hpp"
+
 
 #define PERROR(message) { \
                             perror(message); \
@@ -19,12 +21,6 @@
 
 
 using namespace std;
-
-
-string calculate(const string& expr)
-{
-    return expr;
-}
 
 
 int main()
