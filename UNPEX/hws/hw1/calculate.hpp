@@ -27,20 +27,53 @@ namespace detail
         Token(std::string value) : token_id(TOKEN::INTEGER), value(value) {}
     };
 
+    using TOKEN = Token::TOKEN;
+
 
     struct Node
     {
-
+        virtual ~Node() {}
+        virtual int run_code() = 0;
     };
 
     struct NumberNode : Node
     {
+        int value;
 
+        NumberNode(std::string value) : value(stoi(value)) {}
+
+        virtual int run_code()
+        {
+            return value;
+        }
     };
 
     struct BinaryOperatorNode : Node
     {
+        std::shared_ptr<Node> lhs, rhs;
+        TOKEN op;
 
+        BinaryOperatorNode(std::shared_ptr<Node> lhs, TOKEN op, std::shared_ptr<Node> rhs) :
+            lhs(lhs), rhs(rhs), op(op) {}
+
+        virtual int run_code()
+        {
+            switch (op)
+            {
+                case TOKEN::ADD:
+                    return lhs->run_code() + rhs->run_code();
+                case TOKEN::SUB:
+                    return lhs->run_code() - rhs->run_code();
+                case TOKEN::MUL:
+                    return lhs->run_code() * rhs->run_code();
+                case TOKEN::DIV:
+                    return lhs->run_code() / rhs->run_code();
+                case TOKEN::MOD:
+                    return lhs->run_code() % rhs->run_code();
+                default: break;
+            }
+            exit(0);
+        }
     };
 
 
