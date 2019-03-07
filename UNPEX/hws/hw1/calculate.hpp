@@ -1,6 +1,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <cctype>
 #include <iterator>
 
 
@@ -10,18 +11,10 @@ namespace detail
     {
         enum class TOKEN
         {
-            INTEGER,
-
-            ADD,
-            SUB,
-            MUL,
-            DIV,
-            MOD,
-
-            LPAREN,
-            RPAREN,
-
-            END
+            INTEGER, // [0-9]+
+            ADD, SUB, MUL, DIV, MOD, // + - & / %
+            LPAREN, RPAREN, // ( )
+            END // $
         } token_id;
         std::string value;
 
@@ -42,7 +35,7 @@ namespace detail
     {
         int value;
 
-        NumberNode(int) : value(value) {}
+        NumberNode(int value) : value(value) {}
 
         virtual int run_code()
         {
@@ -81,22 +74,74 @@ namespace detail
 
     inline decltype(auto) tokenizer(const std::string &expr)
     {
-        std::vector<Token> res;
+        std::vector<Token> tokens;
 
         auto reading = expr.c_str();
 
+        enum {
+            BEGIN,
+            IN_INTEGER
+        } state = BEGIN;
+
+        std::string value;
+
         while (*reading)
         {
-            
+            if (state == BEGIN)
+            {
+                switch (*reading)
+                {
+                    case '$':
+                        tokens.push_back(TOKEN::END);
+                    case '(':
+                        tokens.push_back(TOKEN::LPAREN);
+                        break;
+                    case ')':
+                        tokens.push_back(TOKEN::RPAREN);
+                        break;
+                    case '+':
+                        tokens.push_back(TOKEN::ADD);
+                        break;
+                    case '-':
+                        tokens.push_back(TOKEN::SUB);
+                        break;
+                    case '*':
+                        tokens.push_back(TOKEN::MUL);
+                        break;
+                    case '/':
+                        tokens.push_back(TOKEN::DIV);
+                        break;
+                    case '%':
+                        tokens.push_back(TOKEN::MOD);
+                        break;
+                    case '0': case '1': case '2':
+                    case '3': case '4': case '5':
+                    case '6': case '7': case '8':
+                    case '9':
+                        state = IN_INTEGER;
+                        value += *reading;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (isdigit(*reading)) value += *reading;
+            else
+            {
+                tokens.push_back(value);
+                state = BEGIN;
+                value.clear();
+                --reading;
+            }
+            ++reading;
         }
 
-        return res;
+        return tokens;
     }
 
     struct Parser
     {
-        std::vector<Token> tokens;
-        decltype(tokens)::iterator iToken;
+        std::vector<Token>::iterator iToken;
 
         std::shared_ptr<Node> gen_number()
         {
@@ -163,7 +208,7 @@ namespace detail
 
         decltype(auto) parse(const std::string &expr)
         {
-            tokens = tokenizer(expr);
+            auto &&tokens = tokenizer(expr + "$");
             iToken = tokens.begin();
             return gen_expr();
         }
@@ -173,6 +218,5 @@ namespace detail
 
 inline std::string calculate(const std::string &expr)
 {
-    return expr;
-    // return std::to_string(detail::Parser().parse(expr)->run_code());
+    return std::to_string(detail::Parser().parse(expr)->run_code());
 }
