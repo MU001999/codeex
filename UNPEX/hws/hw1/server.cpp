@@ -49,6 +49,7 @@ int main()
 
         if (fork() == 0)
         {
+            close(listen_fd);
             while (true)
             {
                 string expr;
