@@ -11,10 +11,10 @@ namespace detail
     {
         enum class TOKEN
         {
-            INTEGER, // [0-9]+
-            ADD, SUB, MUL, DIV, MOD, // + - & / %
-            LPAREN, RPAREN, // ( )
-            END // $
+            INTEGER,                    // [0-9]+
+            ADD, SUB, MUL, DIV, MOD,    // + - & / %
+            LPAREN, RPAREN,             // ( )
+            END                         // $
         } token_id;
         std::string value;
 
@@ -202,7 +202,7 @@ namespace detail
 
         std::shared_ptr<Node> gen_expr()
         {
-            return gen_factor_rest(gen_factor());
+            return iToken->token_id == TOKEN::END ? nullptr : gen_factor_rest(gen_factor());
         }
 
 
@@ -218,5 +218,6 @@ namespace detail
 
 inline std::string calculate(const std::string &expr)
 {
-    return std::to_string(detail::Parser().parse(expr)->run_code());
+    auto node = detail::Parser().parse(expr);
+    return node ? std::to_string(node->run_code()) : "error input";
 }
