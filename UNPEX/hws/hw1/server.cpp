@@ -44,7 +44,7 @@ int main()
 
     while (true)
     {
-        auto conn_fd = accept(listen_fd, (sockaddr*)&client_addr, &sin_size);
+        auto conn_fd = accept(listen_fd, (sockaddr*)&client_addr, &sin_size), len = 0;
         if (conn_fd < 0) PERROR("accept error");
 
         if (fork() == 0)
@@ -53,14 +53,14 @@ int main()
             {
                 string expr;
 
-                while (recv(conn_fd, buffer, BUFSIZE, 0) > 0)
+                while ((len = recv(conn_fd, buffer, BUFSIZE, 0)) > 0)
                 {
                     expr += buffer;
                     memset(buffer, 0, BUFSIZE);
                     if (expr.size() < BUFSIZE) break;
                 }
 
-                if (expr == "exit") break;
+                if (expr == "exit" || len <= 0) break;
 
                 auto res = calculate(expr);
                 if (send(conn_fd, res.c_str(), res.size(), 0) < 0) PERROR("send error");
