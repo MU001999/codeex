@@ -4,23 +4,26 @@
 #include <initializer_list>
 
 
-template <typename T>
-class avltnode
+namespace detail
 {
-public:
-    T val;
-    int height;
-    ::std::shared_ptr<avltnode> left;
-    ::std::shared_ptr<avltnode> right;
-
-    avltnode(T val, ::std::shared_ptr<avltnode> left = nullptr, ::std::shared_ptr<avltnode> = nullptr):
-        val(val), height(1), left(left), right(right) {}
-
-    int bf()
+    template <typename T>
+    class avltnode
     {
-        return (left ? left->height : 0) - (right ? right->height : 0);
-    }
-};
+    public:
+        T val;
+        int height;
+        ::std::shared_ptr<avltnode> left;
+        ::std::shared_ptr<avltnode> right;
+
+        avltnode(T val, ::std::shared_ptr<avltnode> left = nullptr, ::std::shared_ptr<avltnode> = nullptr):
+            val(val), height(1), left(left), right(right) {}
+
+        int bf()
+        {
+            return (left ? left->height : 0) - (right ? right->height : 0);
+        }
+    };
+}
 
 
 template <typename T>
@@ -36,7 +39,7 @@ public:
 
 
 private:
-    using node_type = avltnode<T>;
+    using node_type = detail::avltnode<T>;
     using node_pointer = ::std::shared_ptr<node_type>;
     using const_node_pointer = ::std::shared_ptr<const node_type>;
     using node_reference = node_type&;
@@ -71,7 +74,7 @@ private:
         }
         else return root;
 
-        root->height = std::max(p_height(root->left), p_height(root->right)) + 1;
+        root->height = ::std::max(p_height(root->left), p_height(root->right)) + 1;
 
         return root;
     }
