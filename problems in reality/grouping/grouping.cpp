@@ -52,7 +52,7 @@ void genRawInfoAndScores()
 
         if (filter.count(_i)) continue; else ++i;
 
-        rawInfo.emplace_back(std::make_pair((score1 + score2 + score3) / 3, No));
+        rawInfo.emplace_back(std::make_pair(score1 + score2 + score3, No));
 
         std::ifstream fin("prefer_" + No + ".txt");
         for (int _j = 0, j = -1; _j < N + filter.size(); ++_j)
