@@ -83,7 +83,7 @@ void computePosG()
 
     auto legal = [=](const int &score) { return (average - ALPHA <= score) && (score <= average + ALPHA); };
 
-    std::function<void(int, int, std::bitset<N>)> add2posG = [&](int i, int k, std::bitset<N> pos) 
+    std::function<void(int, int, std::bitset<N>)> add2posG = [&](int i, int k, std::bitset<N> pos)
     {
         if (k == 0 && legal(computeGradeByGroup(pos)))
         {
