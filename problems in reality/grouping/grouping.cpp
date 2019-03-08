@@ -1,3 +1,4 @@
+#include <set>
 #include <queue>
 #include <tuple>
 #include <array>
@@ -11,9 +12,10 @@
 #include <iostream>
 #include <functional>
 
-#define N     24
-#define K     3
-#define ALPHA 1.5
+
+constexpr auto N = 18, K = 3;
+constexpr double ALPHA = 1.5;
+const std::set<int> filter {0, 2, 9, 14, 17};
 
 
 struct Method
@@ -28,10 +30,10 @@ int computeScoreByGroup(const std::bitset<N>&); // for favorability
 
 
 std::vector<std::pair<int, std::string>> rawInfo;
-std::array<std::array<int, N>, N> scores;
-std::vector<std::bitset<N>> posG;
-std::vector<int> scoreG;
-std::vector<std::vector<int>> noInterference;
+std::array<std::array<int, N>, N>        scores;
+std::vector<std::bitset<N>>              posG;
+std::vector<int>                         scoreG;
+std::vector<std::vector<int>>            noInterference;
 
 
 bool cmp(const Method&, const Method&);
@@ -42,19 +44,24 @@ void genRawInfoAndScores()
 {
     // read prefers
     std::ifstream score_in("score.txt");
-    for (size_t i = 0; i < N; ++i)
+
+    for (int _i = 0, i = -1; _i < N + filter.size(); ++_i)
     {
-        int score;
-        std::string No;
-        score_in >> No >> score;
-        rawInfo.emplace_back(std::make_pair(score, No));
+        int score1, score2, score3; std::string No;
+        score_in >> No >> score1 >> score2 >> score3;
+
+        if (filter.count(_i)) continue; else ++i;
+
+        rawInfo.emplace_back(std::make_pair((score1 + score2 + score3) / 3, No));
 
         std::ifstream fin("prefer_" + No + ".txt");
-        for (size_t j = 0; j < N; ++j)
+        for (int _j = 0, j = -1; _j < N + filter.size(); ++_j)
         {
-            int score;
-            std::string _;
-            fin >> _ >> score;
+            int score; std::string No;
+            fin >> No >> score;
+
+            if (filter.count(_j)) continue; else ++j;
+
             scores[i][j] = score;
         }
     }
