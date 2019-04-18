@@ -13,7 +13,14 @@
 #include <functional>
 
 
-constexpr auto N = 18, K = 3;
+inline void exit_with_msg(const std::string &msg)
+{
+    std::cout << msg << std::endl;
+    exit(0);
+}
+
+
+constexpr auto N = 18, K = 3, ScoreN = 3;
 constexpr double ALPHA = 1.5;
 const std::set<int> filter {0, 2, 9, 14, 17};
 
@@ -25,15 +32,15 @@ struct Method
 };
 
 
-int computeGradeByGroup(const std::bitset<N>&);
-int computeScoreByGroup(const std::bitset<N>&); // for favorability
+double computeGradeByGroup(const std::bitset<N>&, double res = 0);
+int    computeScoreByGroup(const std::bitset<N>&); // for favorability
 
 
-std::vector<std::pair<int, std::string>> rawInfo;
-std::array<std::array<int, N>, N>        scores;
-std::vector<std::bitset<N>>              posG;
-std::vector<int>                         scoreG;
-std::vector<std::vector<int>>            noInterference;
+std::vector<std::pair<double, std::string>> rawInfo;
+std::array<std::array<int, N>, N>           scores;
+std::vector<std::bitset<N>>                 posG;
+std::vector<int>                            scoreG;
+std::vector<std::vector<int>>               noInterference;
 
 
 bool cmp(const Method&, const Method&);
@@ -42,35 +49,30 @@ std::priority_queue<Method, std::vector<Method>, decltype(cmp)*> Result(cmp);
 
 void genRawInfoAndScores()
 {
-    // read prefers
     std::ifstream score_in("score.txt");
+    if (!score_in) exit_with_msg("no such file: score.txt");
 
-    for (int _i = 0, i = -1; _i < N + filter.size(); ++_i)
+    for (int _i = 0, i = -1, tmpscores[ScoreN]; _i < N + filter.size(); ++_i)
     {
-        int score1, score2, score3; std::string No;
-        score_in >> No >> score1 >> score2 >> score3;
+        std::string No; score_in >> No;
+        for (auto &score : tmpscores) score_in >> score;
 
         if (filter.count(_i)) continue; else ++i;
 
-        rawInfo.emplace_back(std::make_pair(score1 + score2 + score3, No));
+        rawInfo.emplace_back(std::make_pair(std::accumulate(std::begin(tmpscores), std::end(tmpscores), 0) / (double)ScoreN, No));
 
         std::ifstream fin("prefer_" + No + ".txt");
-        for (int _j = 0, j = -1; _j < N + filter.size(); ++_j)
+        if (!fin) exit_with_msg("no such file: prefer_" + No + ".txt");
+
+        for (int _j = 0, j = -1, score; _j < N + filter.size(); ++_j)
         {
-            int score; std::string No;
             fin >> No >> score;
-
             if (filter.count(_j)) continue; else ++j;
-
             scores[i][j] = score;
         }
     }
 
-    if (N != rawInfo.size())
-    {
-        std::cout << "The number of students entered should be " << N << " or edit N in code" << std::endl;
-        exit(0);
-    }
+    if (N != rawInfo.size()) exit_with_msg("The number of students entered should be " + std::to_string(N) + " or edit N in code");
 }
 
 
@@ -107,20 +109,13 @@ void computeNoInterference()
     for (auto i = 0; i < (int)posG.size(); ++i)
     {
         noInterference.push_back({});
-        for (auto j = i + 1; j < (int)posG.size(); ++j)
-        {
-            if ((posG[i] & posG[j]).none())
-            {
-                noInterference[i].push_back(j);
-            }
-        }
+        for (auto j = i + 1; j < (int)posG.size(); ++j) if ((posG[i] & posG[j]).none()) noInterference[i].push_back(j);
     }
 }
 
 
-int computeScore(const std::vector<int> &method)
+int computeScore(const std::vector<int> &method, int sum = 0)
 {
-    auto sum = 0;
     for (auto i: method) sum += scoreG[i];
     return sum;
 }
@@ -130,23 +125,7 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
 {
     if (posCurrent.all())
     {
-        auto mtd = Method({ computeScore(method), method });
-        Result.push(mtd);
-        {
-            std::cout << mtd.score << " ";
-            for (auto i : mtd.method)
-            {
-                std::cout << computeGradeByGroup(posG[i]) << " ";
-                for (int j = 0; j < N; ++j)
-                {
-                    if (posG[i][j])
-                    {
-                        std::cout << rawInfo[j].second << " ";
-                    }
-                }
-            }
-            std::cout << std::endl;
-        }
+        Result.push({ computeScore(method), method });
         return 0;
     }
     else if (count == 0) return 1;
@@ -166,7 +145,7 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
 
 void print()
 {
-    std::cout << "\n\n## RESULT ##" << std::endl;
+    std::cout << "## RESULT ##" << std::endl;
     for (int _ = 0; _ < 10 && !Result.empty(); ++_)
     {
         auto top = Result.top();
@@ -214,27 +193,26 @@ bool cmp(const Method &a, const Method &b)
 }
 
 
-int computeGradeByGroup(const std::bitset<N> &group)
+double computeGradeByGroup(const std::bitset<N> &group, double res)
 {
-    int res = 0, i = 0;
-    for (; i < N; ++i) if (group[i]) res += rawInfo[i].first;
+    for (int i = 0; i < N; ++i) if (group[i]) res += rawInfo[i].first;
     return res;
 }
 
 
 int computeScoreByGroup(const std::bitset<N> &group)
 {
-    std::function<int(int, std::bitset<N>)> cntScore = [&](int i, std::bitset<N> pos)
+    std::function<int(int)> cntScore = [&](int i)
     {
         auto j = i, res = 0;
 
-        while (++j < N && !pos[j]);
-        if (j < N) res += scores[i][j] + scores[j][i] + cntScore(j, pos);
-        while (++j < N) if (pos[j]) res += scores[i][j] + scores[j][i];
+        while (++j < N && !group[j]);
+        if (j < N) res += scores[i][j] + scores[j][i] + cntScore(j);
+        while (++j < N) if (group[j]) res += scores[i][j] + scores[j][i];
 
         return res;
     };
 
-    int i = -1; while (++i < N && group[i]);
-    return cntScore(i, group);
+    int i = -1; while (++i < N && !group[i]);
+    return cntScore(i);
 }
