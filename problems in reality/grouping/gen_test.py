@@ -8,7 +8,7 @@ if __name__ == "__main__":
         os.mkdir("./test")
     with open("./test/score.txt", "w") as f:
         for i in range(1, 24):
-            if i < 10: f.write("0" + str(i) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + "\n")
+            if i < 10: f.write(str(i) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + "\n")
             else: f.write(str(i) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + " " + str(randint(60, 99)) + "\n")
     for i in range(23):
         with open("./test/prefer_" + str(i + 1) + ".txt", "w") as f:
