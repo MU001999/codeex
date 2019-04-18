@@ -167,7 +167,7 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
 void print()
 {
     std::cout << "\n\n## RESULT ##" << std::endl;
-    for (int _ = 0; _ < 10; ++_)
+    for (int _ = 0; _ < 10 && !Result.empty(); ++_)
     {
         auto top = Result.top();
         Result.pop();
@@ -227,22 +227,14 @@ int computeScoreByGroup(const std::bitset<N> &group)
     std::function<int(int, std::bitset<N>)> cntScore = [&](int i, std::bitset<N> pos)
     {
         auto j = i, res = 0;
-        while (++j < N)
-        {
-            if (pos[j]) 
-            {
-                res += scores[i][j] + scores[j][i] + cntScore(j, pos);
-                break;
-            }
-        }
 
+        while (++j < N && !pos[j]);
+        if (j < N) res += scores[i][j] + scores[j][i] + cntScore(j, pos);
         while (++j < N) if (pos[j]) res += scores[i][j] + scores[j][i];
 
         return res;
     };
 
-    int res = 0, i = -1;
-    while (++i < N) if (group[i]) break;
-
+    int i = -1; while (++i < N && group[i]);
     return cntScore(i, group);
 }
