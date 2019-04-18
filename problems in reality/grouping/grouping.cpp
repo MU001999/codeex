@@ -5,6 +5,7 @@
 #include <vector>
 #include <bitset>
 #include <string>
+#include <cstdio>
 #include <numeric>
 #include <utility>
 #include <fstream>
@@ -148,19 +149,13 @@ void print()
     std::cout << "## RESULT ##" << std::endl;
     for (int _ = 0; _ < 10 && !Result.empty(); ++_)
     {
-        auto top = Result.top();
-        Result.pop();
-        std::cout << top.score << " ";
+        auto top = Result.top(); Result.pop();
+        printf("%3d | ", top.score);
         for (auto i : top.method)
         {
-            std::cout << computeGradeByGroup(posG[i]) << " ";
-            for (int j = 0; j < N; ++j)
-            {
-                if (posG[i][j])
-                {
-                    std::cout << rawInfo[j].second << " ";
-                }
-            }
+            printf("[ %6.2lf ", computeGradeByGroup(posG[i]));
+            for (int j = 0; j < N; ++j) if (posG[i][j]) printf("%2s ", rawInfo[j].second.c_str());
+            printf("]");
         }
         std::cout << std::endl;
     }
