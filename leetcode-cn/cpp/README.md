@@ -21,6 +21,7 @@
 * [Decode String](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Decode%20String.cpp)
 * [Goat Latin](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Goat%20Latin.cpp)
 * [Occurrences After Bigram](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Occurrences%20After%20Bigram.cpp)
+* [Long Pressed Name](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Long%20Pressed%20Name.cpp)
 
 ### LINKED LIST
 * [Delete Node in a Linked List](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Delete%20Node%20in%20a%20Linked%20List.cpp)
