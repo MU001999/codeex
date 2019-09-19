@@ -24,6 +24,18 @@ int main(int argc, char *argv[])
     Cat cat;
 
     {
+        test<Rat>(&cat);
+    }
+
+    {
+        test<Rat, Rat, Rat>(&cat);
+    }
+
+    {
+        test<Dog, Dog, Dog>(&cat);
+    }
+
+    {
         test<Rat, Dog, Duck>(&cat);
     }
 
