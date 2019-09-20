@@ -6,15 +6,24 @@
 
 namespace design_patterns
 {
+// abstract base class
 class Subject
 {
   public:
+    // pure virtual destructor but with definition
     virtual ~Subject() = 0;
+    // pure virtual method receives a point of one Observer
+    // and register it in the subject
     virtual void registerObserver(Observer *observer) = 0;
+    // pure virtual method receives a point of one Observer
+    // and remove it from the subject
     virtual void removeObserver(Observer *observer) = 0;
+    // pure virtual method receives no arguments
+    // and notify all observers registered
     virtual void notifyObservers() = 0;
 };
 
+// definition for Subject's destructor
 inline Subject::~Subject() {}
 
 class Cat : public Subject
