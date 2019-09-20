@@ -12,5 +12,7 @@ g++ -std=c++17 Test.cpp -o bin/assignment_31
 I'm a rat, I run away LOL
 I'm a dog, I bark LOL
 I'm a duck, I do nothing LOL
+...
 > make clean
+rm -rf ./bin
 ```
