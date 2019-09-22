@@ -12,6 +12,7 @@
 * [Pascal's Triangle II](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Pascal's%20Triangle%20II.cpp)
 * [Height Checker](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Height%20Checker.cpp)
 * [Positions of Large Groups](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Positions%20of%20Large%20Groups.cpp)
+* [Image Smoother](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Image%20Smoother.cpp)
 
 ### STRINGS
 * [Valid Anagram](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Anagram.cpp)
