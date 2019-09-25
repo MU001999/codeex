@@ -9,7 +9,7 @@ class Text
 {
   public:
     virtual ~Text() = 0;
-    virtual T getText() = 0;
+    virtual T getText() const = 0;
 };
 
 template <typename T>
@@ -24,7 +24,7 @@ class PlainText final : public Text<T>
         // do nothing
     }
 
-    T getText() override
+    T getText() const override
     {
         return text_;
     }
@@ -42,7 +42,7 @@ class EncryptedText final : public Text<T>
         // do nothing
     }
 
-    T getText() override
+    T getText() const override
     {
         return text_;
     }
