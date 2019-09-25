@@ -14,5 +14,9 @@ int main(int argc, char *argv[])
         cout << SimpleEncrypt(text).getText() << endl;
     }
 
+    {
+        cout << SimpleEncrypt(SimpleEncrypt(text)).getText() << endl;
+    }
+
     return 0;
 }
