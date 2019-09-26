@@ -15,12 +15,12 @@ class CipherDecorator : public Text<T>
 template <typename T>
 inline CipherDecorator<T>::~CipherDecorator() {}
 
-template <typename T, int step = 5>
+template <typename T>
 class SimpleEncrypt final : public CipherDecorator<T>
 {
   public:
-    SimpleEncrypt(const Text<T> &text)
-      : text_(text)
+    SimpleEncrypt(const Text<T> &text, int step)
+      : text_(text), step_(step)
     {
         // do nothing
     }
@@ -31,12 +31,13 @@ class SimpleEncrypt final : public CipherDecorator<T>
         T result = literal;
         for (std::size_t i = 0; i < literal.size(); ++i)
         {
-            result[(i + step) % result.size()] = literal[i];
+            result[(i + step_) % result.size()] = literal[i];
         }
         return result;
     }
 
   private:
     const Text<T> &text_;
+    const int step_;
 };
 } // namespace design_patterns
