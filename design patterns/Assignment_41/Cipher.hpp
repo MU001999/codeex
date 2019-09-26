@@ -1,6 +1,8 @@
 #pragma once
 
 #include <utility>
+#include <iterator>
+#include <algorithm>
 #include "Text.hpp"
 
 namespace design_patterns
@@ -39,5 +41,50 @@ class SimpleEncrypt final : public CipherDecorator<T>
   private:
     const Text<T> &text_;
     const int step_;
+};
+
+template <typename T>
+class ReverseEncrypt final : public CipherDecorator<T>
+{
+  public:
+    ReverseEncrypt(const Text<T> &text) : text_(text)
+    {
+        // do nothing
+    }
+
+    T getText() const override
+    {
+        auto literal = text_.getText();
+        std::reverse(std::begin(literal), std::end(literal));
+        return literal;
+    }
+
+  private:
+    const Text<T> &text_;
+};
+
+template <typename T>
+class ComplexEncrypt final : public CipherDecorator<T>
+{
+  public:
+    ComplexEncrypt(const Text<T> &text, int leap)
+      : text_(text), leap_(leap)
+    {
+        // do nothing
+    }
+
+    T getText() const override
+    {
+        auto literal = text_.getText();
+        for (auto &each : literal)
+        {
+            each = (each + sizeof(each) + leap) % sizeof(each);
+        }
+        return literal;
+    }
+
+  private:
+    const Text<T> &text_;
+    const int leap_;
 };
 } // namespace design_patterns
