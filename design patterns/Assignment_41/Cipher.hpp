@@ -11,7 +11,15 @@ template <typename T>
 class CipherDecorator : public Text<T>
 {
   public:
+    CipherDecorator(const Text<T> &text)
+      : text_(text)
+    {
+        // do nothing
+    }
     virtual ~CipherDecorator() = 0;
+
+  private:
+    const Text<T> &text_;
 };
 
 template <typename T>
@@ -22,7 +30,7 @@ class SimpleEncrypt final : public CipherDecorator<T>
 {
   public:
     SimpleEncrypt(const Text<T> &text, int step)
-      : text_(text), step_(step)
+      : CipherDecorator(text), step_(step)
     {
         // do nothing
     }
@@ -39,7 +47,6 @@ class SimpleEncrypt final : public CipherDecorator<T>
     }
 
   private:
-    const Text<T> &text_;
     const int step_;
 };
 
@@ -47,7 +54,8 @@ template <typename T>
 class ReverseEncrypt final : public CipherDecorator<T>
 {
   public:
-    ReverseEncrypt(const Text<T> &text) : text_(text)
+    ReverseEncrypt(const Text<T> &text)
+      : CipherDecorator(text)
     {
         // do nothing
     }
@@ -58,9 +66,6 @@ class ReverseEncrypt final : public CipherDecorator<T>
         std::reverse(std::begin(literal), std::end(literal));
         return literal;
     }
-
-  private:
-    const Text<T> &text_;
 };
 
 template <typename T>
@@ -68,7 +73,7 @@ class ComplexEncrypt final : public CipherDecorator<T>
 {
   public:
     ComplexEncrypt(const Text<T> &text, int leap)
-      : text_(text), leap_(leap)
+      : CipherDecorator(text), leap_(leap)
     {
         // do nothing
     }
@@ -84,7 +89,6 @@ class ComplexEncrypt final : public CipherDecorator<T>
     }
 
   private:
-    const Text<T> &text_;
     const int leap_;
 };
 } // namespace design_patterns
