@@ -12,7 +12,8 @@ class Text
   public:
     // pure virtual destructor but with definition
     virtual ~Text() = 0;
-    // pure virtual method and return the text
+    // pure virtual method
+    // return the text
     virtual T getText() const = 0;
 };
 
@@ -25,7 +26,9 @@ template <typename T>
 class PlainText final : public Text<T>
 {
   public:
-    // constructor receives text
+    // constructor
+    // param text: text will be set to
+    //             he plain text owned by this class
     PlainText(T text) : text_(std::move(text))
     {
         // do nothing
