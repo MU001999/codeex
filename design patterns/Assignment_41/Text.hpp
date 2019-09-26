@@ -4,6 +4,8 @@
 
 namespace design_patterns
 {
+// abstract base class Text as the abstract component class
+// T is the type of the data contained
 template <typename T>
 class Text
 {
