@@ -18,7 +18,7 @@ class CipherDecorator : public Text<T>
     }
     virtual ~CipherDecorator() = 0;
 
-  private:
+  protected:
     const Text<T> &text_;
 };
 
@@ -29,15 +29,15 @@ template <typename T>
 class SimpleEncrypt final : public CipherDecorator<T>
 {
   public:
-    SimpleEncrypt(const Text<T> &text, int step)
-      : CipherDecorator(text), step_(step)
+    SimpleEncrypt(const Text<T> &text, int step = 5)
+      : CipherDecorator<T>(text), step_(step)
     {
         // do nothing
     }
 
     T getText() const override
     {
-        auto literal = text_.getText();
+        auto literal = this->text_.getText();
         T result = literal;
         for (std::size_t i = 0; i < literal.size(); ++i)
         {
@@ -55,14 +55,14 @@ class ReverseEncrypt final : public CipherDecorator<T>
 {
   public:
     ReverseEncrypt(const Text<T> &text)
-      : CipherDecorator(text)
+      : CipherDecorator<T>(text)
     {
         // do nothing
     }
 
     T getText() const override
     {
-        auto literal = text_.getText();
+        auto literal = this->text_.getText();
         std::reverse(std::begin(literal), std::end(literal));
         return literal;
     }
@@ -72,18 +72,18 @@ template <typename T>
 class ComplexEncrypt final : public CipherDecorator<T>
 {
   public:
-    ComplexEncrypt(const Text<T> &text, int leap)
-      : CipherDecorator(text), leap_(leap)
+    ComplexEncrypt(const Text<T> &text, int leap = 5)
+      : CipherDecorator<T>(text), leap_(leap)
     {
         // do nothing
     }
 
     T getText() const override
     {
-        auto literal = text_.getText();
+        auto literal = this->text_.getText();
         for (auto &each : literal)
         {
-            each = (each + sizeof(each) + leap) % sizeof(each);
+            each = each + leap_;
         }
         return literal;
     }
