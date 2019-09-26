@@ -32,22 +32,4 @@ class PlainText final : public Text<T>
   private:
     const T text_;
 };
-
-template <typename T>
-class EncryptedText final : public Text<T>
-{
-  public:
-    EncryptedText(T text) : text_(std::move(text))
-    {
-        // do nothing
-    }
-
-    T getText() const override
-    {
-        return text_;
-    }
-
-  private:
-    const T text_;
-};
 } // namespace design_patterns
