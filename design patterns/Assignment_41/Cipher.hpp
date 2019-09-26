@@ -127,7 +127,8 @@ class ComplexEncrypt final : public CipherDecorator<T>
         // for each letter
         for (auto &each : literal)
         {
-            // just leap
+            // just leap, it's simple
+            // and I not plan to fix the overflow error LOL
             each = each + leap_;
         }
         // just return the result
