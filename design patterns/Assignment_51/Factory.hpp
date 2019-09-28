@@ -47,7 +47,7 @@ class HaierFactory final : public Factory
     HaierFactory() = default;
 
     std::shared_ptr<Product>
-    createProduct(const std::string &type)
+    createProduct(const std::string &type) override
     {
         switch (hash(type))
         {
@@ -65,7 +65,7 @@ class TCLFactory final : public Factory
     TCLFactory() = default;
 
     std::shared_ptr<Product>
-    createProduct(const std::string &type)
+    createProduct(const std::string &type) override
     {
         switch (hash(type))
         {
@@ -83,7 +83,7 @@ class HisenseFactory final : public Factory
     HisenseFactory() = default;
 
     std::shared_ptr<Product>
-    createProduct(const std::string &type)
+    createProduct(const std::string &type) override
     {
         switch (hash(type))
         {
@@ -101,7 +101,7 @@ class AppleFactory final : public Factory
     AppleFactory() = default;
 
     std::shared_ptr<Product>
-    createProduct(const std::string &type)
+    createProduct(const std::string &type) override
     {
         switch (hash(type))
         {
