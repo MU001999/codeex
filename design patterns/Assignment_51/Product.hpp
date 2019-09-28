@@ -30,4 +30,14 @@ class HisenseMobilephone final : public Product
 {
 
 };
+
+class AppleTV final : public Product
+{
+
+};
+
+class AppleFridge final : public Product
+{
+
+};
 } // namespace design_patterns
