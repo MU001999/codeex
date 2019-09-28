@@ -9,7 +9,7 @@ namespace design_patterns
 {
 namespace
 {
-constexpr std::size_t operator""hash(const char *str, std::size_t len)
+constexpr std::size_t operator""_hash(const char *str, std::size_t len)
 {
     if (len == 0)
     {
@@ -17,13 +17,13 @@ constexpr std::size_t operator""hash(const char *str, std::size_t len)
     }
     else
     {
-        return (*str * *str + operator""hash(str + 1, len - 1)) % 13717;
+        return (*str * *str + operator""_hash(str + 1, len - 1)) % 13717;
     }
 }
 
 std::size_t hash(const std::string &str)
 {
-    return operator""hash(str.c_str(), str.size() + 1);
+    return operator""_hash(str.c_str(), str.size() + 1);
 }
 } // namespace
 
@@ -51,7 +51,7 @@ class HaierFactory final : public Factory
     {
         switch (hash(type))
         {
-        case "TV"hash:
+        case "TV"_hash:
             return std::make_shared<HaierTV>();
         default:
             throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
@@ -69,7 +69,7 @@ class TCLFactory final : public Factory
     {
         switch (hash(type))
         {
-        case "Fridge"hash:
+        case "Fridge"_hash:
             return std::make_shared<TCLFridge>();
         default:
             throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
@@ -87,7 +87,7 @@ class HisenseFactory final : public Factory
     {
         switch (hash(type))
         {
-        case "Mobilephone"hash:
+        case "Mobilephone"_hash:
             return std::make_shared<HisenseMobilephone>();
         default:
             throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
@@ -105,9 +105,9 @@ class AppleFactory final : public Factory
     {
         switch (hash(type))
         {
-        case "TV"hash:
+        case "TV"_hash:
             return std::make_shared<AppleTV>();
-        case "Fridge"hash:
+        case "Fridge"_hash:
             return std::make_shared<AppleFridge>();
         default:
             throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
