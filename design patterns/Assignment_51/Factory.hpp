@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <exception>
 #include "Product.hpp"
 
 namespace design_patterns
@@ -53,23 +54,64 @@ class HaierFactory final : public Factory
         case "TV"hash:
             return std::make_shared<HaierTV>();
         default:
-            return nullptr;
+            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
         }
     }
 };
 
 class TCLFactory final : public Factory
 {
+  public:
+    TCLFactory() = default;
 
+    std::shared_ptr<Product>
+    createProduct(const std::string &type)
+    {
+        switch (hash(type))
+        {
+        case "Fridge"hash:
+            return std::make_shared<TCLFridge>();
+        default:
+            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+        }
+    }
 };
 
 class HisenseFactory final : public Factory
 {
+  public:
+    HisenseFactory() = default;
 
+    std::shared_ptr<Product>
+    createProduct(const std::string &type)
+    {
+        switch (hash(type))
+        {
+        case "Mobilephone"hash:
+            return std::make_shared<HisenseMobilephone>();
+        default:
+            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+        }
+    }
 };
 
 class AppleFactory final : public Factory
 {
+  public:
+    AppleFactory() = default;
 
+    std::shared_ptr<Product>
+    createProduct(const std::string &type)
+    {
+        switch (hash(type))
+        {
+        case "TV"hash:
+            return std::make_shared<AppleTV>();
+        case "Fridge"hash:
+            return std::make_shared<AppleFridge>();
+        default:
+            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+        }
+    }
 };
 } // namespace design_patterns
