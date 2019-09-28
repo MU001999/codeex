@@ -54,7 +54,8 @@ class HaierFactory final : public Factory
         case "TV"_hash:
             return std::make_shared<HaierTV>();
         default:
-            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+            throw std::invalid_argument("invalid argument type in calling createProduct, "
+                "no such type for " + type + " in HaierFactory");
         }
     }
 };
@@ -72,7 +73,8 @@ class TCLFactory final : public Factory
         case "Fridge"_hash:
             return std::make_shared<TCLFridge>();
         default:
-            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+            throw std::invalid_argument("invalid argument type in calling createProduct, "
+                "no such type for " + type + " in TCLFactory");
         }
     }
 };
@@ -90,7 +92,8 @@ class HisenseFactory final : public Factory
         case "Mobilephone"_hash:
             return std::make_shared<HisenseMobilephone>();
         default:
-            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+            throw std::invalid_argument("invalid argument type in calling createProduct, "
+                "no such type for " + type + " in HisenseFactory");
         }
     }
 };
@@ -110,7 +113,8 @@ class AppleFactory final : public Factory
         case "Fridge"_hash:
             return std::make_shared<AppleFridge>();
         default:
-            throw std::invalid_argument("invalid argument type in calling createProduct, no such type");
+            throw std::invalid_argument("invalid argument type in calling createProduct, "
+                "no such type for " + type + " in AppleFactory");
         }
     }
 };
