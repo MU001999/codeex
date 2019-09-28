@@ -6,26 +6,32 @@
 using namespace std;
 using namespace design_patterns;
 
-int main(int argc, char *argv[])
+template <typename F, typename T1, typename ...Ts>
+void test(T1 arg, Ts... args)
 {
+    Factory *factory = new F();
+    try
     {
-        Factory *factory = new HaierFactory();
-        auto product = factory->createProduct("TV");
+        auto product = factory->createProduct(arg);
         cout << product->getInfo() << endl;
     }
-
+    catch (const invalid_argument &e)
     {
-        Factory *factory = new HaierFactory();
-        try
-        {
-            auto product = factory->createProduct("Fridge");
-            cout << product->getInfo() << endl;
-        }
-        catch(const std::invalid_argument& e)
-        {
-            cerr << e.what() << endl;
-        }
+        cout << e.what() << endl;
     }
+    delete factory;
+    if constexpr (sizeof...(Ts) > 0)
+    {
+        test<F>(args...);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    test<HaierFactory>("TV", "Fridge", "Mobilephone");
+    test<TCLFactory>("TV", "Fridge", "Mobilephone");
+    test<HisenseFactory>("TV", "Fridge", "Mobilephone");
+    test<AppleFactory>("TV", "Fridge", "Mobilephone");
 
     return 0;
 }
