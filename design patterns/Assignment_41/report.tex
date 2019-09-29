@@ -1,0 +1,33 @@
+\documentclass{article}
+
+\begin{document}
+	\thispagestyle{empty}
+	
+	This is a report about assignment 4-1. I design two abstract base classes, one named Text and another named CipherDecorator, and there are a class named PlainText extends Text and other three class extend CipherDecorator, named SimpleEncrypt, ReverseEncrypt and ComplexEncrypt.
+	
+	\section{Abstract Class Text}
+	
+	I design the class named Text as the abstract \textbf{component class} for each other classes, and it has only one method for getting the text of itself. Let the decoration type object only decorate the object it receives without changing the interface that produces the behavior.
+	
+	\section{Class PlainText}
+	
+	This concrete component class simply extends class Text, it contains the raw text.
+	It just returns the raw text in the implement of its getText method.
+	
+	\section{Abstract Class CipherDecorator}
+	
+	Class CipherDecorator is designed as the \textbf{decorator class} and there is a const reference to a received component object as a member of this class. Decorators will receive a const reference to a object of class Text or classes extend Text and then process the result from calling getText of the object and return the processed text finally.
+	
+	\section{Class SimpleEncrypt}
+	
+	This concrete decorator class extends class CipherDecorator and it's used to process each letter by moving it. We can get the final result by calling the method named getText.
+	
+	\section{Class ReverseEncrypt}
+	
+	This concrete decorator class extends class CipherDecorator and it's used to reverse the text from the decorated object. 
+	
+	\section{Class ComplexEncrypt}
+	
+	This concrete decorator class extends class CipherDecorator and it's used to re-encrypt the text from the decorated object by a simple method LOL.
+
+\end{document}
