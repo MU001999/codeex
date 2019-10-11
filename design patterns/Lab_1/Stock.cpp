@@ -26,16 +26,15 @@ void Stock::setPrice(double price)
     notifyObservers();
 }
 
-void Stock::registerObserver(Observer *observer, int shares, double range)
+void Stock::registerObserver(Observer *observer)
 {
     assert(observer != nullptr);
     assert(!infos_.count(observer));
     observers_.push_back(observer);
-    infos_[observer] = std::make_tuple(shares, price_, range);
-    updatePrice(shares);
+    infos_[observer] = make_tuple(0, price_, DefaultRange);
 }
 
-void Stock::updateObserver(Observer *observer, int shares, double range)
+void Stock::changeShares(Observer *observer, int shares)
 {
     assert(infos_.count(observer));
     auto [old_shares, old_price, old_range] = infos_[observer];
@@ -45,12 +44,18 @@ void Stock::updateObserver(Observer *observer, int shares, double range)
         return;
     }
     auto price = (old_shares * old_price + shares * price_) / (old_shares + shares);
-    infos_[observer] = std::make_tuple(old_shares + shares, price, range);
+    infos_[observer] = make_tuple(old_shares + shares, price, old_range);
 
     if (shares > 0)
     {
         updatePrice(shares);
     }
+}
+
+void Stock::changeRange(Observer *observer, double range)
+{
+    assert(infos_.count(observer));
+    get<2>(infos_[observer]) = range;
 }
 
 void Stock::removeObserver(Observer *observer)

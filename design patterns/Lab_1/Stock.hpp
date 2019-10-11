@@ -17,13 +17,16 @@ class Stock
     double getPrice() const;
     void setPrice(double price);
 
-    void registerObserver(Observer *observer, int shares, double range);
-    void updateObserver(Observer *observer, int shares, double range);
+    void registerObserver(Observer *observer);
     void removeObserver(Observer *observer);
     void notifyObservers();
 
+    void changeShares(Observer *observer, int shares);
+    void changeRange(Observer *observer, double range);
+
   private:
     constexpr static int SellThreshold = 10;
+    constexpr static double DefaultRange = 0.1;
 
     void updatePrice(int shares);
 
