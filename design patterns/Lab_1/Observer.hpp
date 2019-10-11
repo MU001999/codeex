@@ -32,10 +32,9 @@ class Investor : public Observer
     void sellStockAll(Stock *stock);
 
   private:
-    constexpr static double DefaultRange = 0.1;
     std::string name_;
     std::list<Stock *> stocks_;
-    std::map<Stock *, std::tuple<int, double>> infos_;
+    std::map<Stock *, int> shares_;
 };
 
 } // namespace design_patterns

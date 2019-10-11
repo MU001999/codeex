@@ -54,42 +54,45 @@ void Investor::update(Stock* stock, double range)
 void Investor::buyStock(Stock *stock, int shares, double range)
 {
     assert(shares > 0);
-    if (!infos_.count(stock))
+    if (!shares_.count(stock))
     {
-        range = (range < 0) ? DefaultRange : range;
+        stock->registerObserver(this);
         stocks_.push_back(stock);
-        infos_[stock] = make_tuple(shares, range);
-        stock->registerObserver(this, shares, range);
+        shares_[stock] = shares;
     }
     else
     {
-        get<0>(infos_[stock]) += shares;
-        stock->updateObserver(this, shares, (range < 0) ? get<1>(infos_[stock]) : range);
+        shares_[stock] += shares;
     }
+
+    if (range > 0)
+    {
+        stock->changeRange(this, range);
+    }
+    stock->changeShares(this, shares);
 }
 
 void Investor::changeRange(Stock *stock, double range)
 {
-    assert(infos_.count(stock));
-    get<1>(infos_[stock]) = range;
-    stock->updateObserver(this, 0, range);
+    assert(shares_.count(stock));
+    stock->changeRange(this, range);
 }
 
 void Investor::sellStock(Stock *stock, int shares)
 {
-    assert(infos_.count(stock));
-    shares = std::min(shares, get<0>(infos_[stock]));
-    stock->updateObserver(this, -shares, get<1>(infos_[stock]));
-    get<0>(infos_[stock]) -= shares;
-    if (get<0>(infos_[stock]) == 0)
+    assert(shares_.count(stock));
+    shares = std::min(shares, shares_[stock]);
+    stock->changeRange(this, -shares);
+    shares_[stock] -= shares;
+    if (shares_[stock] == 0)
     {
         stocks_.remove(stock);
-        infos_.erase(stock);
+        shares_.erase(stock);
     }
 }
 
 void Investor::sellStockAll(Stock *stock)
 {
-    assert(infos_.count(stock));
-    sellStock(stock, get<0>(infos_[stock]));
+    assert(shares_.count(stock));
+    sellStock(stock, shares_[stock]);
 }
