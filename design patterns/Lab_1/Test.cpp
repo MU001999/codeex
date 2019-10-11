@@ -46,13 +46,12 @@ int main(int argc, char *argv[])
     cout << endl
 
     DEAL(XiaoMing, 100, 0.3,  Tfosorcim);
-    DEAL(XiaoMing, 100, 0.01, Elgoog);
-    DEAL(XiaoMing, 100, 0.1,  Elppa);
-    DEAL(DaXiong,  5,   0.3,  Elgoog);
-    DEAL(DaXiong,  5,   0.3,  Elgoog);
-    DEAL(DaXiong,  5,   0.3,  Elgoog);
-    DEAL(DaXiong,  200, 0.05, Elppa);
-    DEAL(Michael,  300, 0.1,  Elppa);
+    DEAL(XiaoMing, 100, 0.1,  Elgoog);
+    DEAL(XiaoMing, 100, 0.2,  Elppa);
+    DEAL(DaXiong,  40,  0.3,  Elgoog);
+    DEAL(DaXiong,  60,  0.2,  Elgoog);
+    DEAL(DaXiong,  200, 0.1,  Elppa);
+    DEAL(Michael,  300, 0.4,  Elppa);
 
 #undef DEAL
 
