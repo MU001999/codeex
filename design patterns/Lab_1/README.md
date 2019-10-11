@@ -7,7 +7,7 @@ Just type `make` and enter, then type './bin/lab_1' and enter, you will see the 
 ```plain
 > make
 mkdir bin
-g++ -std=c++17 Test.cpp -o bin/lab_1
+g++ -std=c++17 Stock.cpp Observer.cpp Test.cpp -o bin/lab_1
 > ./bin/lab_1
 
 > make clean
