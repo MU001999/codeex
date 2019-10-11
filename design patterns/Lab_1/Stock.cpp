@@ -15,22 +15,17 @@ string Stock::getName() const
     return name_;
 }
 
-// get the voice of the cat
 double Stock::getPrice() const
 {
     return price_;
 }
 
-// receives the value of voice
-// and set the voice of the cat
 void Stock::setPrice(double price)
 {
     price_ = price;
-    // notify all observers after setting the voice
     notifyObservers();
 }
 
-// implement of registerObserver
 void Stock::registerObserver(Observer *observer, int shares, double range)
 {
     assert(observer != nullptr);
@@ -52,7 +47,6 @@ void Stock::updateObserver(Observer *observer, int shares, double range)
     infos_[observer] = std::make_tuple(old_shares + shares, price, range);
 }
 
-// implement of removeObserver
 void Stock::removeObserver(Observer *observer)
 {
     assert(infos_.count(observer));
@@ -60,10 +54,8 @@ void Stock::removeObserver(Observer *observer)
     infos_.erase(observer);
 }
 
-// implement of notifyObservers
 void Stock::notifyObservers()
 {
-    // traverse observers
     for (auto observer : observers_)
     {
         auto [_, price, range] = infos_[observer];

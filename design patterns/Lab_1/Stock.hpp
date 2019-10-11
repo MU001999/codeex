@@ -11,7 +11,6 @@ namespace design_patterns
 class Stock
 {
   public:
-    // default constructor
     Stock(std::string name, double price);
 
     std::string getName() const;
@@ -26,7 +25,6 @@ class Stock
   private:
     std::string name_;
     double price_;
-    // store all observers registered
     std::list<Observer *> observers_;
     std::map<Observer *, std::tuple<int, double, double>> infos_;
 };
