@@ -16,7 +16,7 @@ Elppa's price is 1000
 Then the stock market is starting to work
 
 XiaoMing buys 100 shares of Tfosorcim
-Tfosorcim's price is 2200
+Tfosorcim's price is 2400
 Elgoog's price is 1500
 Elppa's price is 1000
 ...
