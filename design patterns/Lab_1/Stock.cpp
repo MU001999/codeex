@@ -5,7 +5,7 @@ using namespace std;
 using namespace design_patterns;
 
 Stock::Stock(string name, double price)
-    : name_(move(name)), price_(price)
+  : name_(move(name)), price_(price)
 {
     // do nothing
 }
@@ -32,6 +32,7 @@ void Stock::registerObserver(Observer *observer, int shares, double range)
     assert(!infos_.count(observer));
     observers_.push_back(observer);
     infos_[observer] = std::make_tuple(shares, price_, range);
+    updatePrice(shares);
 }
 
 void Stock::updateObserver(Observer *observer, int shares, double range)
@@ -45,6 +46,11 @@ void Stock::updateObserver(Observer *observer, int shares, double range)
     }
     auto price = (old_shares * old_price + shares * price_) / (old_shares + shares);
     infos_[observer] = std::make_tuple(old_shares + shares, price, range);
+
+    if (shares > 0)
+    {
+        updatePrice(shares);
+    }
 }
 
 void Stock::removeObserver(Observer *observer)
@@ -65,5 +71,17 @@ void Stock::notifyObservers()
         {
             observer->update(this, (price_ - price) / price);
         }
+    }
+}
+
+void Stock::updatePrice(int shares)
+{
+    if (shares < SellThreshold)
+    {
+        setPrice(price_ * 0.9);
+    }
+    else
+    {
+        setPrice(price_ * 1.1);
     }
 }

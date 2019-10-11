@@ -23,6 +23,10 @@ class Stock
     void notifyObservers();
 
   private:
+    constexpr static int SellThreshold = 10;
+
+    void updatePrice(int shares);
+
     std::string name_;
     double price_;
     std::list<Observer *> observers_;
