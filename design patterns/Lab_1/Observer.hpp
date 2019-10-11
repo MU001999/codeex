@@ -22,15 +22,18 @@ class Observer
 class Investor : public Observer
 {
   public:
-    constexpr static double defaultRange = 0.1;
+    Investor(std::string name);
+    std::string getName() const;
 
     void update(Stock* stock, double range) override;
-    void buyStock(Stock *stock, int shares);
+    void buyStock(Stock *stock, int shares, double range = -1.0);
     void changeRange(Stock *stock, double range);
     void sellStock(Stock *stock, int shares);
     void sellStockAll(Stock *stock);
 
   private:
+    constexpr static double DefaultRange = 0.1;
+    std::string name_;
     std::list<Stock *> stocks_;
     std::map<Stock *, std::tuple<int, double>> infos_;
 };
