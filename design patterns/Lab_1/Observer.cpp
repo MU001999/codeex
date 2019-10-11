@@ -25,10 +25,20 @@ void Investor::update(Stock* stock, double range)
         cout << "\tThe stock of " << stock->getName() << " "
             "fell " << setprecision(2) << -range * 100 << "%." << endl;
 
-        cout << "\tI'm going to buy more 100 shares, "
-            "or rather I've been trapped :(" << endl;
+        cout << "\tI've been trapped :(" << endl;
 
-        buyStock(stock, 100);
+        int choice, shares;
+        cout << "Tell me what's your opinion, "
+            "1 for buying, 2 for selling and "
+            "3 for doing nothing:" << endl;
+        cin >> choice;
+        cout << "Then tell me how many shares you want:" << endl;
+        cin >> shares;
+
+        if (choice != 3)
+        {
+            (choice == 1) ? buyStock(stock, shares) : sellStock(stock, shares);
+        }
     }
     else if (range == 0)
     {
@@ -43,11 +53,11 @@ void Investor::update(Stock* stock, double range)
         cout << "\tThe stock of " << stock->getName() << " "
             "is up " << setprecision(2) << range * 100 << "%." << endl;
 
-        cout << "\tI'm goint to sell 10 shares "
+        cout << "\tI'm goint to sell 20 shares "
             "because I don't like to earn much money "
             "although I believe that it will keep going up :)" << endl;
 
-        sellStock(stock, 10);
+        sellStock(stock, 20);
     }
 }
 
