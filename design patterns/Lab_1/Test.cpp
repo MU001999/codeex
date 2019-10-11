@@ -1,62 +1,60 @@
+#include <map>
+#include <iomanip>
+#include <iostream>
 #include "Observer.hpp"
-#include "Subject.hpp"
+#include "Stock.hpp"
 
-// using the namespace named design_patterns for this project
+using namespace std;
 using namespace design_patterns;
 
-// template function for testing ovserver and subjects
-// T for class Observer, and Ts for rest class Observers
-// returns nothing and just test
-template <typename T, typename ...Ts>
-auto test(Cat *cat) -> void
+// there are three stocks and their prices on Mondy
+#define STOCK(Name, Price) Stock Name(#Name, Price)
+    STOCK(Tfosorcim, 2000);
+    STOCK(Elgoog,    1500);
+    STOCK(Elppa,     1000);
+#undef STOCK
+
+// there are three inverstor
+#define INVESTOR(Name) Investor Name(#Name)
+    INVESTOR(XiaoMing);
+    INVESTOR(DaXiong);
+    INVESTOR(Michael);
+#undef INVESTOR
+
+void showStocks()
 {
-    // init one object (observer)
-    T obj;
+#define SHOW(Stock) cout << #Stock "'s price is " \
+    << Stock.getPrice() << endl
 
-    // register the observer in the subject (cat)
-    cat->registerObserver(&obj);
-
-    // call test<Ts...>(cat) if size of Ts (rest class Observers) is greater than 0
-    // else call cat->yell()
-    if constexpr (sizeof...(Ts) > 0)
-    {
-        test<Ts...>(cat);
-    }
-    else
-    {
-        cat->yell();
-    }
-
-    // remove the observer from the subject (cat)
-    cat->removeObserver(&obj);
+    SHOW(Tfosorcim);
+    SHOW(Elgoog);
+    SHOW(Elppa);
+#undef SHOW
 }
 
 // the main control function
 int main(int argc, char *argv[])
 {
-    // init a subject (cat)
-    Cat cat;
+    cout << "Initial..." << endl;
+    showStocks();
+    cout << "Then the stock market is starting to work" << endl << endl;
 
-    {
-        // case that observer is only a rat
-        test<Rat>(&cat);
-    }
+#define DEAL(Name, Num, Range, Firm)\
+    cout << #Name " buys " #Num " shares of " #Firm << endl;\
+    Name.buyStock(&Firm, Num, Range);\
+    showStocks();\
+    cout << endl
 
-    {
-        // case that observers consist of three rats
-        test<Rat, Rat, Rat>(&cat);
-    }
+    DEAL(XiaoMing, 100, 0.3,  Tfosorcim);
+    DEAL(XiaoMing, 100, 0.01, Elgoog);
+    DEAL(XiaoMing, 100, 0.1,  Elppa);
+    DEAL(DaXiong,  5,   0.3,  Elgoog);
+    DEAL(DaXiong,  5,   0.3,  Elgoog);
+    DEAL(DaXiong,  5,   0.3,  Elgoog);
+    DEAL(DaXiong,  200, 0.05, Elppa);
+    DEAL(Michael,  300, 0.1,  Elppa);
 
-    {
-        // case that observers consist of three dogs
-        test<Dog, Dog, Dog>(&cat);
-    }
+#undef DEAL
 
-    {
-        // case that observers consist of one rat, one dog and one duck
-        test<Rat, Dog, Duck>(&cat);
-    }
-
-    // just return 0
     return 0;
 }
