@@ -45,11 +45,7 @@ void Stock::changeShares(Observer *observer, int shares)
     }
     auto price = (old_shares * old_price + shares * price_) / (old_shares + shares);
     infos_[observer] = make_tuple(old_shares + shares, price, old_range);
-
-    if (shares > 0)
-    {
-        updatePrice(shares);
-    }
+    updatePrice(shares);
 }
 
 void Stock::changeRange(Observer *observer, double range)
@@ -81,12 +77,6 @@ void Stock::notifyObservers()
 
 void Stock::updatePrice(int shares)
 {
-    if (shares < SellThreshold)
-    {
-        setPrice(price_ * 0.9);
-    }
-    else
-    {
-        setPrice(price_ * 1.1);
-    }
+    shares = shares > 0 ? shares : (2 * SellThreshold + shares);
+    setPrice(price_ * (shares <= SellThreshold ? 0.8 : 1.2));
 }

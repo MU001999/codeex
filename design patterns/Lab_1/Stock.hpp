@@ -25,8 +25,8 @@ class Stock
     void changeRange(Observer *observer, double range);
 
   private:
-    constexpr static int SellThreshold = 10;
-    constexpr static double DefaultRange = 0.1;
+    constexpr static int SellThreshold = 50;
+    constexpr static double DefaultRange = 0.2;
 
     void updatePrice(int shares);
 
