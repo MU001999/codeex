@@ -3,11 +3,10 @@
 #include <map>
 #include <list>
 #include <tuple>
-#include <iostream>
 
 namespace design_patterns
 {
-class Subject;
+class Stock;
 
 // abstract base class Observer
 class Observer
@@ -17,26 +16,23 @@ class Observer
     virtual ~Observer() = 0;
     // pure virtual method receives the value of the voice of the subject
     // and update (change sth. or do some actions)
-    virtual void update(double range) = 0;
+    virtual void update(Stock *stock, double range) = 0;
 };
-
-// definition for Observer's destructor
-inline Observer::~Observer() {}
 
 class Investor : public Observer
 {
   public:
-    constexpr static int defaultRange = 0.1;
+    constexpr static double defaultRange = 0.1;
 
-    void update(double range) override;
-    void buyStock(Subject *stock, int shares);
-    void changeRange(Subject *stock, double range);
-    void sellStock(Subject *stock, int shares);
-    void sellStockAll(Subject *stock, int shares);
+    void update(Stock* stock, double range) override;
+    void buyStock(Stock *stock, int shares);
+    void changeRange(Stock *stock, double range);
+    void sellStock(Stock *stock, int shares);
+    void sellStockAll(Stock *stock);
 
   private:
-    std::list<Subject *> stocks_;
-    std::map<Subject *, std::tuple<int, double>> infos_;
+    std::list<Stock *> stocks_;
+    std::map<Stock *, std::tuple<int, double>> infos_;
 };
 
 } // namespace design_patterns
