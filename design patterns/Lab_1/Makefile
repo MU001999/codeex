@@ -1,4 +1,6 @@
-./bin/lab_1: Stock.cpp Observer.cpp Test.cpp | ./bin/
+SRC = $(wildcard ./src/*.cpp)
+
+./bin/lab_1: ${SRC} | ./bin/
 	g++ -std=c++17 $^ -o $@
 
 ./bin/:
