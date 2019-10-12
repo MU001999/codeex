@@ -5,9 +5,15 @@
 using namespace std;
 using namespace design_patterns;
 
-void easyAction(Investor *investor, Stock *stock, double range)
+// simple action to update when receiving a notification
+// param inverstor: for which investor
+// param stock: for which stock, received notification from
+// param range: for range in the notification
+void simpleAction(Investor *investor, Stock *stock, double range)
 {
+    // print the investor's name
     cout << "\tMy name is " << investor->getName();
+    // if lose money, buy 100 shares
     if (range < 0)
     {
         cout << ". The stock of " << stock->getName() << " "
@@ -18,6 +24,7 @@ void easyAction(Investor *investor, Stock *stock, double range)
 
         investor->buyStock(stock, 100);
     }
+    // else if make money, sell 20 shares
     else
     {
         cout << ". The stock of " << stock->getName() << " "
@@ -37,9 +44,9 @@ void easyAction(Investor *investor, Stock *stock, double range)
 Stock Tfosorcim("Tfosorcim", 2000);
 
 // there are three inverstors
-Investor XiaoMin("XiaoMin", easyAction),
-         DaXiong("DaXiong", easyAction),
-         Michael("Michael", easyAction);
+Investor XiaoMin("XiaoMin", simpleAction),
+         DaXiong("DaXiong", simpleAction),
+         Michael("Michael", simpleAction);
 
 // print price of the stock
 void showStock()
