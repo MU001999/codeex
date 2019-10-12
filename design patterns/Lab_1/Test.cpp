@@ -7,53 +7,45 @@
 using namespace std;
 using namespace design_patterns;
 
-// there are three stocks and their prices on Mondy
-#define STOCK(Name, Price) Stock Name(#Name, Price)
-    STOCK(Tfosorcim, 2000);
-    STOCK(Elgoog,    1500);
-    STOCK(Elppa,     1000);
-#undef STOCK
+Stock Tfosorcim("Tfosorcim", 2000);
 
 // there are three inverstor
-#define INVESTOR(Name) Investor Name(#Name)
-    INVESTOR(XiaoMing);
-    INVESTOR(DaXiong);
-    INVESTOR(Michael);
-#undef INVESTOR
+Investor XiaoMin("XiaoMin"),
+         DaXiong("DaXiong"),
+         Michael("Michael");
 
-void showStocks()
+void showStock()
 {
-#define SHOW(Stock) cout << #Stock "'s price is " \
-    << Stock.getPrice() << endl
+    cout << "Tfosorcim's price is " \
+    << Tfosorcim.getPrice() << endl;
+}
 
-    SHOW(Tfosorcim);
-    SHOW(Elgoog);
-    SHOW(Elppa);
-#undef SHOW
+void roll(int num)
+{
+    cout << "This is Roll " << num << "!" << endl;
+    Tfosorcim.nextRoll();
+    showStock();
+    cout << endl;
 }
 
 // the main control function
 int main(int argc, char *argv[])
 {
-    cout << "Initial..." << endl;
-    showStocks();
-    cout << "Then the stock market is starting to work" << endl << endl;
+#define DEAL(Name, Num, Range)\
+    cout << #Name " buys " #Num " shares of Tfosorcim" << endl;\
+    Name.buyStock(&Tfosorcim, Num, Range)
 
-#define DEAL(Name, Num, Range, Firm)\
-    cout << #Name " buys " #Num " shares of " #Firm << endl;\
-    Name.buyStock(&Firm, Num, Range);\
-    showStocks();\
-    cout << endl
+    showStock();
+    cout << "Then the stock market is starting to work" << endl;
+    DEAL(XiaoMin, 80, 0.1);
+    DEAL(DaXiong, 60, 0.2);
+    DEAL(Michael, 40, 0.3);
+    cout << endl;
 
-    DEAL(XiaoMing, 100, 0.3,  Tfosorcim);
-    DEAL(XiaoMing, 100, 0.1,  Elgoog);
-    DEAL(XiaoMing, 100, 0.2,  Elppa);
-    DEAL(DaXiong,  40,  0.3,  Elgoog);
-    DEAL(DaXiong,  60,  0.2,  Elgoog);
-    DEAL(DaXiong,  200, 0.1,  Elppa);
-    DEAL(Michael,  300, 0.4,  Elppa);
-
-#undef DEAL
+    for (int i = 1; i <= 10; ++i)
+    {
+        roll(i);
+    }
 
     return 0;
 }
