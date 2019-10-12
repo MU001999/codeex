@@ -5,15 +5,41 @@
 using namespace std;
 using namespace design_patterns;
 
+void easyAction(Investor *investor, Stock *stock, double range)
+{
+    cout << "\tMy name is " << investor->getName();
+    if (range < 0)
+    {
+        cout << ". The stock of " << stock->getName() << " "
+            "fell " << -(int)(range * 100) << "%";
+
+        cout << ". I'm going to buy more 100 shares, "
+            "or rather I've been trapped :(" << endl;
+
+        investor->buyStock(stock, 100);
+    }
+    else
+    {
+        cout << ". The stock of " << stock->getName() << " "
+            "is up " << (int)(range * 100) << "%";
+
+        cout << ". I'm goint to sell 20 shares "
+            "because I don't like to earn much money "
+            "although I believe that it will keep going up :)" << endl;
+
+        investor->sellStock(stock, 20);
+    }
+}
+
 // there is a stock named Tfosorcim
 // in other places in this program
 // the stock specifically points to this one
 Stock Tfosorcim("Tfosorcim", 2000);
 
 // there are three inverstors
-Investor XiaoMin("XiaoMin"),
-         DaXiong("DaXiong"),
-         Michael("Michael");
+Investor XiaoMin("XiaoMin", easyAction),
+         DaXiong("DaXiong", easyAction),
+         Michael("Michael", easyAction);
 
 // print price of the stock
 void showStock()

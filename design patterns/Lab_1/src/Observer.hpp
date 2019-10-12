@@ -3,6 +3,7 @@
 #include <map>
 #include <list>
 #include <tuple>
+#include <functional>
 
 namespace design_patterns
 {
@@ -22,8 +23,12 @@ class Observer
 class Investor : public Observer
 {
   public:
-    Investor(std::string name);
+    using ActionType = std::function<void(Investor *, Stock *, double)>;
+
+    Investor(std::string name, ActionType &&action = nullptr);
+
     std::string getName() const;
+    void setUpdateAction(ActionType &&action);
 
     void update(Stock* stock, double range) override;
     void buyStock(Stock *stock, int shares, double range = -1.0);
@@ -33,6 +38,7 @@ class Investor : public Observer
 
   private:
     std::string name_;
+    ActionType updateAction_;
     std::list<Stock *> stocks_;
     std::map<Stock *, int> shares_;
 };

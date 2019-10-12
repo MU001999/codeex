@@ -6,10 +6,7 @@ using namespace std;
 using namespace design_patterns;
 
 Stock::Stock(string name, double price)
-  : name_(move(name)), price_(price), curDealShares_(0)
-{
-    // do nothing
-}
+  : name_(move(name)), price_(price), curDealShares_(0) {}
 
 string Stock::getName() const
 {

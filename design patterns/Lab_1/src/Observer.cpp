@@ -1,5 +1,4 @@
 #include <cassert>
-#include <iostream>
 #include "Stock.hpp"
 #include "Observer.hpp"
 
@@ -8,38 +7,22 @@ using namespace design_patterns;
 
 Observer::~Observer() {}
 
-Investor::Investor(string name)
-  : name_(move(name)) {}
+Investor::Investor(string name, ActionType &&action)
+  : name_(move(name)), updateAction_(move(action)) {}
 
 string Investor::getName() const
 {
     return name_;
 }
 
-void Investor::update(Stock* stock, double range)
+void Investor::setUpdateAction(ActionType &&action)
 {
-    cout << "\tMy name is " << name_;
-    if (range < 0)
-    {
-        cout << ". The stock of " << stock->getName() << " "
-            "fell " << -(int)(range * 100) << "%";
+    updateAction_ = move(action);
+}
 
-        cout << ". I'm going to buy more 100 shares, "
-            "or rather I've been trapped :(" << endl;
-
-        buyStock(stock, 100);
-    }
-    else
-    {
-        cout << ". The stock of " << stock->getName() << " "
-            "is up " << (int)(range * 100) << "%";
-
-        cout << ". I'm goint to sell 20 shares "
-            "because I don't like to earn much money "
-            "although I believe that it will keep going up :)" << endl;
-
-        sellStock(stock, 20);
-    }
+void Investor::update(Stock *stock, double range)
+{
+    updateAction_(this, stock, range);
 }
 
 void Investor::buyStock(Stock *stock, int shares, double range)
