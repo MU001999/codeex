@@ -19,41 +19,23 @@ string Investor::getName() const
 
 void Investor::update(Stock* stock, double range)
 {
-    cout << "\tMy name is " << name_ << endl;
+    cout << "\tMy name is " << name_;
     if (range < 0)
     {
-        cout << "\tThe stock of " << stock->getName() << " "
-            "fell " << setprecision(2) << -range * 100 << "%." << endl;
+        cout << ". The stock of " << stock->getName() << " "
+            "fell " << -(int)(range * 100) << "%";
 
-        cout << "\tI've been trapped :(" << endl;
+        cout << ". I'm going to buy more 100 shares, "
+            "or rather I've been trapped :(" << endl;
 
-        int choice, shares;
-        cout << "Tell me what's your opinion, "
-            "1 for buying, 2 for selling and "
-            "3 for doing nothing:" << endl;
-        cin >> choice;
-        cout << "Then tell me how many shares you want:" << endl;
-        cin >> shares;
-
-        if (choice != 3)
-        {
-            (choice == 1) ? buyStock(stock, shares) : sellStock(stock, shares);
-        }
-    }
-    else if (range == 0)
-    {
-        cout << "\tThe stock of " << stock->getName() << " "
-            "is realy a bad stock for me because it is unchanged, "
-            "so I will sell all the shares :(" << endl;
-
-        sellStockAll(stock);
+        buyStock(stock, 100);
     }
     else
     {
-        cout << "\tThe stock of " << stock->getName() << " "
-            "is up " << setprecision(2) << range * 100 << "%." << endl;
+        cout << ". The stock of " << stock->getName() << " "
+            "is up " << (int)(range * 100) << "%";
 
-        cout << "\tI'm goint to sell 20 shares "
+        cout << ". I'm goint to sell 20 shares "
             "because I don't like to earn much money "
             "although I believe that it will keep going up :)" << endl;
 
@@ -75,7 +57,7 @@ void Investor::buyStock(Stock *stock, int shares, double range)
         shares_[stock] += shares;
     }
 
-    if (range > 0)
+    if (range >= 0)
     {
         stock->changeRange(this, range);
     }
@@ -92,7 +74,7 @@ void Investor::sellStock(Stock *stock, int shares)
 {
     assert(shares_.count(stock));
     shares = std::min(shares, shares_[stock]);
-    stock->changeRange(this, -shares);
+    stock->changeShares(this, -shares);
     shares_[stock] -= shares;
     if (shares_[stock] == 0)
     {
