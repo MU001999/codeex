@@ -1,6 +1,6 @@
 #include <cassert>
-#include <iostream>
 #include "Stock.hpp"
+#include "Observer.hpp"
 
 using namespace std;
 using namespace design_patterns;
@@ -61,14 +61,14 @@ void Stock::changeShares(Observer *observer, int shares)
 {
     assert(infos_.count(observer));
     curDealShares_ += shares;
-    auto [old_shares, old_price, old_range] = infos_[observer];
-    if (old_shares + shares == 0)
+    auto [oldShares, oldPrice, oldRange] = infos_[observer];
+    if (oldShares + shares == 0)
     {
         removeObserver(observer);
         return;
     }
-    auto price = (old_shares * old_price + shares * price_) / (old_shares + shares);
-    infos_[observer] = make_tuple(old_shares + shares, price, old_range);
+    auto price = (oldShares * oldPrice + shares * price_) / (oldShares + shares);
+    infos_[observer] = make_tuple(oldShares + shares, price, oldRange);
 }
 
 void Stock::changeRange(Observer *observer, double range)
@@ -77,7 +77,7 @@ void Stock::changeRange(Observer *observer, double range)
     get<2>(infos_[observer]) = range;
 }
 
-void Stock::nextRoll()
+void Stock::nextRound()
 {
     updatePrice(curDealShares_);
 }

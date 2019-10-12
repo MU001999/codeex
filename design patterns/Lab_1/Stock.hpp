@@ -4,10 +4,10 @@
 #include <list>
 #include <tuple>
 #include <string>
-#include "Observer.hpp"
 
 namespace design_patterns
 {
+class Observer;
 class Stock
 {
   public:
@@ -24,7 +24,7 @@ class Stock
     void changeShares(Observer *observer, int shares);
     void changeRange(Observer *observer, double range);
 
-    void nextRoll();
+    void nextRound();
 
   private:
     constexpr static int SellThreshold = 50;

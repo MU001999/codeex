@@ -1,8 +1,7 @@
 #include <cassert>
-#include <iomanip>
 #include <iostream>
-#include "Observer.hpp"
 #include "Stock.hpp"
+#include "Observer.hpp"
 
 using namespace std;
 using namespace design_patterns;
