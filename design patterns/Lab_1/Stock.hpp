@@ -24,6 +24,8 @@ class Stock
     void changeShares(Observer *observer, int shares);
     void changeRange(Observer *observer, double range);
 
+    void nextRoll();
+
   private:
     constexpr static int SellThreshold = 50;
     constexpr static double DefaultRange = 0.2;
@@ -32,6 +34,7 @@ class Stock
 
     std::string name_;
     double price_;
+    int curDealShares_;
     std::list<Observer *> observers_;
     std::map<Observer *, std::tuple<int, double, double>> infos_;
 };
