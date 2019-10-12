@@ -43,7 +43,7 @@ void simpleAction(Investor *investor, Stock *stock, double range)
 // the stock specifically points to this one
 Stock Tfosorcim("Tfosorcim", 2000);
 
-// there are three inverstors
+// there are three inverstors with the simple action
 Investor XiaoMin("XiaoMin", simpleAction),
          DaXiong("DaXiong", simpleAction),
          Michael("Michael", simpleAction);
