@@ -61,7 +61,7 @@ void showStock()
 void round(int num)
 {
     cout << "This is Round " << num << "!" << endl;
-    // go to the next state
+    // execute all transactions in this round and then update the price
     Tfosorcim.nextRound();
     showStock(); cout << endl;
 }
