@@ -44,6 +44,7 @@ class Stock
     void changeRange(Observer *observer, double range);
 
     // execute all transactions in current round and then update the price
+    // easy call updatePrice
     void nextRound();
 
   private:
@@ -54,7 +55,7 @@ class Stock
     constexpr static double DefaultRange = 0.2;
 
     // update price of this stock by all changed shares in current round
-    void updatePrice(int shares);
+    void updatePrice();
 
     std::string name_;
     double price_;
