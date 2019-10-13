@@ -1,3 +1,6 @@
 *.out
-
+*.aux
+*.log
+*.pdf
+*.synctex.*
 bin/
