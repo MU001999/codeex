@@ -1,11 +1,106 @@
 \documentclass{article}
+
+\usepackage{color}
+\usepackage{xcolor}
+\definecolor{keywordcolor}{rgb}{0.8,0.1,0.5}
+\usepackage{listings}
+\lstset{breaklines}
+\lstset{extendedchars=false}
+\lstset{language=C++,
+	keywordstyle=\color{keywordcolor} \bfseries,
+	identifierstyle=,
+	basicstyle=\ttfamily, 
+	commentstyle=\color{blue} \textit,
+	stringstyle=\ttfamily, 
+	showstringspaces=false,
+	%frame=shadowbox
+	captionpos=b
+}
+
 \title{Report for Lab 1}
 \author{Xu Bo}
 \date{}
 
 \begin{document}
 	\maketitle
+	
+\section{Introduction}
+    I choose the case 4 in lab 1. We take the stock market as the background in this lab. When a stock price changes by more than 10\%, the system sends a notification to investors who buy the stock. Each investor decides whether to continue holding, selling, or taking other operations based on the degree of rise or fall of the shares it holds. 
+    
+    In addition, the user can define the threshold of the price's rise and fall. The value, that is, does not exceed this threshold, the user does not want to be notified. Stocks can adjust their prices based on the number of purchases. In my design, if the number of shares sold exceeds 50 shares, the stock price will be raised. Otherwise, the stock price will be lowered.
 
-	This is a report about lab 1.
+\section{Classes I Design}
+    Obviously investors are the observers and stocks are the subjects, which will be observed by observers, in this case. So I designed four classes intuitively, two of these, named Subject and Observer, are abstract base classes and the other two, named Stock and Investor, are concrete classes.
+    
+\subsection{Subject}
+    Subject is an abstract base class to declare interfaces but without implements. And subject will be observed by observers, while observers will be notified by subject when the subject updates. So in this class, we just declare the following pure virtual methods, the interfaces, for all subjects:
+    
+\begin{lstlisting}
+virtual void registerObserver(Observer *observer) = 0;
+virtual void removeObserver(Observer *observer) = 0;
+virtual void notifyObservers() = 0;
+\end{lstlisting}
+
+    As we can see, there are three methods. Their functions are just like their names, method registerObserver is used to register the given observer in this subject, method removeObserver is used to remove the given observer in this subject and method notifyObservers is used to notify each observer that is registered in this subject.
+    
+\subsection{Observer}
+    Class Observer is simple, it likes class Subject as an abstract base class. It provides only one pure virtual method, the interface, for all observers:
+    
+\begin{lstlisting}
+virtual void update(Subject *subject, double range) {};
+\end{lstlisting}
+
+    Actually this method is specific to class Investor, which will be mentioned later, because it has a parameter with type pointer of Subject and a parameter with type double. And we can see it has a default implement, what makes it easy to extend this system if there is another concrete observer to observe other subjects. For example, we can add a method likes:
+
+\begin{lstlisting}
+virtual void update(Subject *subject) {};
+\end{lstlisting}
+
+    This will not make errors when just add this declaration in this class because it has the default implement, so I think it's useful if we need to extend.
+
+\subsection{Stock}
+    Class Stock is the concrete class extends class Subject. It implements all methods inherited from Subject. And it contains a list of observers to store the registered observers and some specific information such as price of this stock and information related to each shareholder such as the number of shares purchased by each shareholder and the threshold. Of course it provides methods to get or set its member variables like name or price.
+    
+    Compared with the Subject, Stock provides the following interfaces:
+
+\begin{lstlisting}
+void changeShares(Observer *observer, int shares);
+void changeRange(Observer *observer, double range);
+void nextRound();
+\end{lstlisting}
+
+    As mentioned before, it has a member variable to store information related to each shareholder. The variable is a map, and its type is std::map<Observer *, std::tuple<int, double, double> >, first for shares, second for the average price of the investor bought and third for the threshold of degree of price's rise or fall in the tuple. So the first two methods are used to change the information of the given observer. And there is a variable named curDealShares to store changed shares in each round. So method changeShares won't update price but will change the curDealShares. And then we call method nextRound to update price when we are ready to go to next round. It will be explained in details later.
+
+\subsection{Investor}
+
+    Class Investor is the concrete class extends class Observer. So it observes some subjects, some stocks in fact, and waits for their notifications. This class not only implements the method update inherited from Observer but also has other 6 methods:
+    
+\begin{lstlisting}
+using ActionType = std::function<void(Investor *, Stock *, double)>;
+
+std::string getName() const;
+void setUpdateAction(ActionType &&action);
+void buyStock(Stock *stock, int shares, double range = -1.0);
+void changeRange(Stock *stock, double range);
+void sellStock(Stock *stock, int shares);
+void sellStockAll(Stock *stock);
+\end{lstlisting}
+
+    Before introducing these methods, I will show Investor's members firstly. In this class, we have following 4 members:
+    
+\begin{lstlisting}
+std::string name_;
+ActionType updateAction_;
+std::list<Stock *> stocks_;
+std::map<Stock *, int> shares_;
+\end{lstlisting}
+
+    I think it's clear to see methods named getName and setUpdateAction are just getter and setter methods for name\_ and updateAction\_. In deed, what is actually executed in the method update, inherited from Observer, is the function object updateAction\_. Method changeRange is simple to call the corresponding stock's method changeRange to change the threshold of degree of price's rise or fall to decide to notify or not.
+    
+    And there are three methods left, buyStock, sellStock and sellStockAll. Method buyStock will register the investor in the given stock if not registered, buy the given shares of the given stock and set range in stock if range is greater than zero. Method sellStock is used to sell the given shares of the given stock and remove the stock from stocks\_ and shares\_ after selling if the given shares is greater than shares the investor has. Method sellStockAll is simple to call sellStock.
+
+\section{Time to Play}
+
+    In the previous section, we have already known some about these classes. So let's start to see how the entire system works now!
 
 \end{document}
