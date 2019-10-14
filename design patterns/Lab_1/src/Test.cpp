@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Stock.hpp"
+#include "Subject.hpp"
 #include "Observer.hpp"
 
 using namespace std;
