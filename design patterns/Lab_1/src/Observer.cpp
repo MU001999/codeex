@@ -1,5 +1,5 @@
 #include <cassert>
-#include "Stock.hpp"
+#include "Subject.hpp"
 #include "Observer.hpp"
 
 using namespace std;
@@ -21,10 +21,10 @@ void Investor::setUpdateAction(ActionType &&action)
     updateAction_ = move(action);
 }
 
-void Investor::update(Stock *stock, double range)
+void Investor::update(Subject *stock, double range)
 {
     // call updateAction_ to do some actions
-    updateAction_(this, stock, range);
+    updateAction_(this, dynamic_cast<Stock *>(stock), range);
 }
 
 void Investor::buyStock(Stock *stock, int shares, double range)
@@ -77,10 +77,12 @@ void Investor::sellStock(Stock *stock, int shares)
     stock->changeShares(this, -shares);
     shares_[stock] -= shares;
     // delete the stock after selling all shares
+    // and remove this investor from the stock
     if (shares_[stock] == 0)
     {
         stocks_.remove(stock);
         shares_.erase(stock);
+        stock->removeObserver(this);
     }
 }
 

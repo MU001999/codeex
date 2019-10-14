@@ -16,7 +16,10 @@ class Observer
     // pure virtual destructor but with definition
     virtual ~Observer() = 0;
     // pure virtual method which will be called by the subject
-    virtual void update(Stock *stock, double range) = 0;
+    // it has a default implement, so it can be called normally
+    // and it will be fun to add interfaces for others Observer
+    // if possible
+    virtual void update(Subject *subject, double range) {};
 };
 
 // derived class Investor extends class Observer
@@ -41,7 +44,7 @@ class Investor : public Observer
     //     when the stock's price changes
     // param stock: which stock calls this method
     // param range: the changed range
-    void update(Stock* stock, double range) override;
+    void update(Subject* stock, double range) override;
     // buy shares of the given stock and change the range
     //     if given range is greater than zero
     // param stock: which stock the investor buy shares of
