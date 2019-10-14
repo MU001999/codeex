@@ -9,8 +9,20 @@ namespace design_patterns
 {
 class Observer;
 
+class Subject
+{
+  public:
+    virtual ~Subject() = 0;
+    // pure method to register the given observer in the subject
+    virtual void registerObserver(Observer *observer) = 0;
+    // pure method to remove the given observer in the subject
+    virtual void removeObserver(Observer *observer) = 0;
+    // pure method to notify all registered observers
+    virtual void notifyObservers() = 0;
+};
+
 // concrete class without an absract base class
-class Stock
+class Stock final : public Subject
 {
   public:
     // constructor
@@ -27,11 +39,11 @@ class Stock
     void setPrice(double price);
 
     // register the given observer in the stock
-    void registerObserver(Observer *observer);
+    void registerObserver(Observer *observer) override;
     // remove the given observer in the stock
-    void removeObserver(Observer *observer);
+    void removeObserver(Observer *observer) override;
     // notify all registered observers
-    void notifyObservers();
+    void notifyObservers() override;
 
     // change shares for the given observer to buy or sell
     // param observer: for which observer to buy or sell

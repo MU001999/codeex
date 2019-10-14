@@ -1,9 +1,12 @@
+#include <random>
 #include <cassert>
-#include "Stock.hpp"
+#include "Subject.hpp"
 #include "Observer.hpp"
 
 using namespace std;
 using namespace design_patterns;
+
+Subject::~Subject() {}
 
 Stock::Stock(string name, double price)
   : name_(move(name)), price_(price), curDealShares_(0) {}
@@ -77,7 +80,7 @@ void Stock::changeShares(Observer *observer, int shares)
     // remove the observer if the observer has sold all shares it has
     if (oldShares + shares == 0)
     {
-        removeObserver(observer);
+        // removeObserver(observer) should be called by the observer
         return;
     }
     // update the info of this investor
@@ -99,8 +102,16 @@ void Stock::nextRound()
 
 void Stock::updatePrice()
 {
+    // this code is copied from
+    // https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
+    // to produce a random floating-point value
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0, 0.5);
     // if curDealShares_is less than SellThreshold,
-    //     set the price to 80% of current price
-    // else set the price to 120 % of current price
-    setPrice(price_ * (curDealShares_ <= SellThreshold ? 0.8 : 1.2));
+    //     increse the price with the random range
+    // else reduce the price with the random range
+    setPrice(price_ * (curDealShares_ <= SellThreshold
+        ? (1 - dis(gen))
+        : (1 + dis(gen))));
 }
