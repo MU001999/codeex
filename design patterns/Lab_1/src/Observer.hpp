@@ -23,7 +23,7 @@ class Observer
 };
 
 // derived class Investor extends class Observer
-class Investor : public Observer
+class Investor final : public Observer
 {
   public:
     // type for the updateAction, which will be called in method update
