@@ -52,9 +52,12 @@ void Stock::removeObserver(Observer *observer)
 
 void Stock::notifyObservers()
 {
+    // can't traverse observers_ straightly because
+    // observers_ may change when call observers' method update
+    auto observers = observers_;
     // traverse all observers and
     // notify the observers that satisfy the condition
-    for (auto observer : observers_)
+    for (auto observer : observers)
     {
         auto [_, price, range] = infos_[observer];
         auto low  = price - price * range,
