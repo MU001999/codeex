@@ -102,5 +102,29 @@ std::map<Stock *, int> shares_;
 \section{Time to Play}
 
     In the previous section, we have already known some about these classes. So let's start to see how the entire system works now!
+    
+    Actually the market is running in rounds and we can treat transactions made in the same round as transactions that are made at the same time. That is, each round is equivalent to every moment, but we can control the rounds manually by calling stocks' method nextRound.
+    
+    Initially we can declare a few stocks, or only one stock, and a few investors. The investors' actions for updating are set by user. In the test, I declare a stock named Tfosorcim, witch's price is 2000, and three investors:
+    
+\begin{lstlisting}
+Stock Tfosorcim("Tfosorcim", 2000);
+
+Investor XiaoMin("XiaoMin", simpleAction),
+         DaXiong("DaXiong", simpleAction),
+         Michael("Michael", simpleAction);
+\end{lstlisting}
+    
+    And then investors can buy shares of stocks they like. The investors will be registered in stocks which they not purchased previously.
+    
+    The stocks will also record how many deals happen in this round and count the account of changed shares and decide to update their prices by some ways related to the changed shares or just random ways.
+    
+    We can call stocks' method nextRound if no deals will happen in this round now. In my design, if the shares sold are more than 50 shares, stocks' prices will rise randomly, otherwise the prices will fall randomly.
+    
+    At present, stocks' prices have been updated, and stocks will notify investors who purchase shares of their if the degrees of prices change meet the investors' conditions. As we can see, the operation to decide whether to notify is in stocks, although the conditions are provided by investors.
+    
+    Now method 'update' of investors will be called by stocks, then the function object updateAction\_ of investors will be called later. In this simple test, action of investor is that the investor will purchase 100 shares of the stock if price rises, or sell 20 shares of the stock if price falls.
+    
+    Before we end each round, investors still can purchase or sell shares. These behaviors also won't change the stocks' prices immediately. Naturally the last step in each round is calling stocks' method nextRound. After that we only need to repeat these steps, the market will always run, and can stop at any time.
 
 \end{document}
