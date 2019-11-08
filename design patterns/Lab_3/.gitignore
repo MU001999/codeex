@@ -1,0 +1,6 @@
+*.out
+*.aux
+*.log
+*.pdf
+*.synctex.*
+Bin/
