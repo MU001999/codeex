@@ -8,11 +8,17 @@
 #include <condition_variable>
 #include "Command.hpp"
 
+// concrate class OS
+// can run, stop,
+// add read command or add write command
 class OS
 {
   public:
+    // simple constructor, just assign stop_ to false
     OS() : stop_(false) {}
 
+    // method run, run two threads
+    // to execute commands for reading and writing
     void run()
     {
         stop_ = false;

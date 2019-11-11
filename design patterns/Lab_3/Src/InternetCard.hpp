@@ -6,7 +6,7 @@
 #include <shared_mutex>
 #include "Device.hpp"
 
-// class InternetCard extends class Device
+// concrete class InternetCard extends class Device
 class InternetCard : public Device
 {
   public:
