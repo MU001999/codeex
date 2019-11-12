@@ -16,14 +16,14 @@ int main(int argc, char *argv[])
     auto ram = make_shared<Ram>("ram");
     auto soundCard = make_shared<SoundCard>("scard");
 
-    vector<shared_ptr<Command>> readCommands
+    vector<shared_ptr<ReadCommand>> readCommands
     {
         make_shared<InternetCardReadCommand>(internetCard),
         make_shared<RamReadCommand>(ram),
         make_shared<SoundCardReadCommand>(soundCard)
     };
 
-    vector<shared_ptr<Command>> writeCommands
+    vector<shared_ptr<WriteCommand>> writeCommands
     {
         make_shared<InternetCardWriteCommand>(internetCard),
         make_shared<RamWriteCommand>(ram),
