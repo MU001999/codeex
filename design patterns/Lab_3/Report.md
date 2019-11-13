@@ -4,11 +4,41 @@
 
 ## 1. Analysis of Lab Task
 
-Describe the task, what patterns I choose and why I choose these patterns.
+In lab 3, the task is that there some I/O devices, which support read and write operations, and one OS to employ queues to manage all the read-write requets.
+
+So I design this program with command pattern, read or write operation for each device will be set to an object. And tasks for OS are just to call the uniform interface provided by the objects' common base class Command. Also OS will detach two threads to execute commands.
 
 ## 2. Overall Design
 
-Give the UMLs but with no detail codes, and then describe these classes.
+### 2.1 Devices
+
+There is an abstract base class Device for all devices and three concrete classes named InternetCard, Ram and SoundCard, which extend Device. Each device will have its own methods for reading or executing.
+
+### 2.2 Commands
+
+I design three abstract classes for commands. The first is class Command, which is the base class for all command objects.
+
+All commands can be segregated to read commands and write commands. So I design two another abstract classes named ReadCommand and WriteCommand extend class Command.
+
+After all, there are three concrete classes named InternetCardReadCommand, RamReadCommand and SoundCardReadCommand extend ReadCommand and three concrete classes named InternetCardWriteCommand, RamWriteCommand and SoundCardWriteCommand extend WriteCommand.
+
+Each concrete command object has a pointer to the corresponding device object, so we can call the uniform interface but not care about the concrete methods of devices.
+
+### 2.3 OS
+
+OS is a concrete class to manage added commands (operations). This class contains two queues, one for read commands and another one for write commands. OS provides four methods, two for run and stop and another two for add commands.
+
+In method run, OS will init two threads to execute read-write commands individually. And there will be some ways to avoid problems in multi-threads. Method stop will set a flag to make this system stop.
+
+Methods addReadCommand and addWriteCommand are to add commands to corresponding queues.
+
+And OS has other private methods named executeReadCommands and executeWriteCommands whitch will be called in the two threads inited in the method run.
+
+<div STYLE="page-break-after: always;"></div>
+
+### 2.4 UML Class Diagram
+
+The linkage of these objects is shown by the following diagram:
 
 @startuml
 Device <|-- InternetCard
@@ -155,7 +185,6 @@ __ operations __
 -executeReadCommands
 -executeWriteCommands
 }
-
 @enduml
 
 ## 3. Key Components and Detailed Design
