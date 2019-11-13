@@ -34,6 +34,5 @@ private:
     // the shared mutex to make sure that method sendIn will block
     // when method recvFrom is calling
     std::shared_mutex mutexForExec_;
-    // the name of this card
     std::string name_;
 };

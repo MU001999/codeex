@@ -87,11 +87,16 @@ class OS
             if (readCommands_.empty())
             {
                 using namespace std::literals::chrono_literals;
+                // locks the associated mutex in exclusive mode
                 std::unique_lock lock(mutexForROps_);
+                // https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+                // this thread will block until the queue is not empty or for 20ms
                 cvForROps_.wait_for(lock, 20ms, [this] { return !this->readCommands_.empty(); });
             }
+            // else if queue if not empty
             else
             {
+                // get, pop and then execute the front command of the queue
                 auto command = readCommands_.front();
                 readCommands_.pop();
                 command->execute();
@@ -103,16 +108,23 @@ class OS
     {
         while (true)
         {
+            // if stop_ is set to true, it will break this loop
             if (stop_)
             {
                 break;
             }
+            // if queue for write commands is empty,
+            // it means no commands to execute now
             if (writeCommands_.empty())
             {
                 using namespace std::literals::chrono_literals;
+                // locks the associated mutex in exclusive mode
                 std::unique_lock lock(mutexForWOps_);
+                // https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+                // this thread will block until the queue is not empty or for 20ms
                 cvForWOps_.wait_for(lock, 20ms, [this] { return !this->writeCommands_.empty(); });
             }
+            // else if queue if not empty
             else
             {
                 auto command = writeCommands_.front();
