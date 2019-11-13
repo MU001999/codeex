@@ -10,12 +10,15 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    // just run the os
     OS os; os.run();
 
+    // init three devices
     auto internetCard = make_shared<InternetCard>("icard");
     auto ram = make_shared<Ram>("ram");
     auto soundCard = make_shared<SoundCard>("scard");
 
+    // init three read commands for above three devices
     vector<shared_ptr<ReadCommand>> readCommands
     {
         make_shared<InternetCardReadCommand>(internetCard),
@@ -23,6 +26,7 @@ int main(int argc, char *argv[])
         make_shared<SoundCardReadCommand>(soundCard)
     };
 
+    // init three write commands for above three devices
     vector<shared_ptr<WriteCommand>> writeCommands
     {
         make_shared<InternetCardWriteCommand>(internetCard),
@@ -30,17 +34,23 @@ int main(int argc, char *argv[])
         make_shared<SoundCardWriteCommand>(soundCard)
     };
 
-    // https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<> dis(0, 2);
+    // https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
+    uniform_int_distribution<> disInt(0, 2);
+    // loop for 5 times
+    // and there is will be a random sleep before add operation
     for (int i = 0; i < 5; ++i)
     {
-        os.addReadCommand(readCommands[dis(gen)]);
-        os.addWriteCommand(writeCommands[dis(gen)]);
+        Command::sleepRandom();
+        os.addReadCommand(readCommands[disInt(gen)]);
+        Command::sleepRandom();
+        os.addWriteCommand(writeCommands[disInt(gen)]);
     }
 
-    this_thread::sleep_for(200ms);
+    // wait for no command to execute
+    this_thread::sleep_for(1s);
+    // stop the os
     os.stop();
 
     return 0;
