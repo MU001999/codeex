@@ -300,7 +300,35 @@ Maybe you will feel puzzled when you see `Command::sleepRamdom();`, I will expla
 
 ### 3.3 OS's Execution Process
 
-The most complex part I think in this lab is the OS's implementation, I will give the declaration of it firstly and then introduce it in detail through segregated parts.
+The most complex part I think in this lab is the OS's implementation, I will give the declaration of it as the following firstly and then introduce it in detail through segregated parts.
+
+```cpp
+class OS
+{
+  public:
+    OS() : stop_(false) {}
+
+    void run();
+    void stop();
+    void addReadCommand(std::shared_ptr<ReadCommand> command);
+    void addWriteCommand(std::shared_ptr<WriteCommand> command);
+
+  private:
+    void executeReadCommands();
+    void executeWriteCommands();
+
+    std::queue<std::shared_ptr<ReadCommand>> readCommands_;
+    std::mutex mutexForROps_;
+    std::condition_variable cvForROps_;
+
+    std::queue<std::shared_ptr<WriteCommand>> writeCommands_;
+    std::mutex mutexForWOps_;
+    std::condition_variable cvForWOps_;
+
+    bool stop_;
+};
+
+```
 
 ## 4. Test Procedure
 
