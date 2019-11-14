@@ -191,9 +191,112 @@ __ operations __
 
 ## 3. Key Components and Detailed Design
 
+In this section, I will introduce these classes with their implementations in detial.
+
 ### 3.1 Devices' Assignments
 
+Each concrete device class has two methods for read operation and write operation. For instance, the two methods named sendIn and recvFrom in class InternetCard. And then I will introduce the implementations with an example in InternetCard's because the other two are like it.
+
+```cpp
+class InternetCard : public Device
+{
+  public:
+    InternetCard(std::string name) : name_(std::move(name)) {}
+
+    void sendIn()
+    {
+        std::cout << name_ << " is sending..." << std::endl;
+    }
+
+    void recvFrom()
+    {
+        std::unique_lock lock(mutexForExec_);
+        std::cout << name_ << " is receiving..." << std::endl;
+    }
+
+private:
+    std::shared_mutex mutexForExec_;
+    std::string name_;
+};
+```
+
+Let's look at the InternetCard's implementation above. The constructor is easy to understand. In these two methods, I make locks to make sure the two will block themselves when the other is executing. But some read operations can execute together at the same time.
+
+I locks the shared mutex in shared mode at first in method sendIn and locks the shared mutex in exclusive mode at the beginning of method recvFrom in order to make sure things will be done as mentioned in the previous paragraph.
+
+Something about the shared_lock and unique_lock you can look for more at [shared_lock](https://en.cppreference.com/w/cpp/thread/shared_lock) and [unique_lock](https://en.cppreference.com/w/cpp/thread/unique_lock).
+
 ### 3.2 Commands' Simple Actions
+
+Commands extend the same base class Command with only one interface named execute, the following code is the defination of classes Command, ReadCommand and WriteCommand:
+
+```cpp
+class Command
+{
+  public:
+    virtual ~Command() = default;
+    virtual void execute() = 0;
+    static void sleepRandom();
+};
+
+class ReadCommand  : public Command
+{
+  public:
+    virtual ~ReadCommand() = default;
+    virtual void execute() = 0;
+};
+
+class WriteCommand : public Command
+{
+  public:
+    virtual ~WriteCommand() = default;
+    virtual void execute() = 0;
+};
+```
+
+In my implementatin, I write a helpful macro to help generate all similar concrete command classes, so look at the following code of the macro:
+
+```cpp
+#define GEN_COMMAND(Device, Op, Name, Method) \
+class Device##Op##Command final : public Op##Command \
+{ \
+  public: \
+    Device##Op##Command(std::shared_ptr<Device> Name) \
+      : Name##_(Name) \
+    {} \
+    void execute() override \
+    { \
+        Command::sleepRandom(); \
+        Name##_->Method(); \
+    } \
+  private: \
+    std::shared_ptr<Device> Name##_; \
+}
+```
+
+*Device* is the param on behalf of which device this macro generate class for, *Op* on behalf of which op to call when calling the method execute, *Name* for the user-defined member variable's name in this generated class and *Command* means the real method's name of the given device class.
+
+For example, a generated class by using `GEN_COMMAND(InternetCard, Read, internetCard, sendIn);` will like the following InternetCardReadCommand:
+
+```cpp
+class InternetCardReadCommand final : public ReadCommand
+{
+  public:
+    InternetCardReadCommand(std::shared_ptr<InternetCard> internetCard)
+     : internetCard_(internetCard) {}
+
+    void execute() override
+    {
+        Command::sleepRandom();
+        internetCard_->sendIn();
+    }
+
+  private:
+    std::shared_ptr<InternetCard> internetCard_;
+};
+```
+
+Maybe you will feel puzzled when you see `Command::sleepRamdom();`, I will explain it in section 4.
 
 ### 3.3 OS's Execution Process
 
