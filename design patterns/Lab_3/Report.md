@@ -300,6 +300,8 @@ Maybe you will feel puzzled when you see `Command::sleepRamdom();`, I will expla
 
 ### 3.3 OS's Execution Process
 
+The most complex part I think in this lab is the OS's implementation, I will give the declaration of it firstly and then introduce it in detail through segregated parts.
+
 ## 4. Test Procedure
 
 Describe the procedure of testing with the example result.
