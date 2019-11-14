@@ -10,6 +10,8 @@ So I design this program with command pattern, read or write operation for each 
 
 ## 2. Overall Design
 
+There are some overall descriptions for classes I designed.
+
 ### 2.1 Devices
 
 There is an abstract base class Device for all devices and three concrete classes named InternetCard, Ram and SoundCard, which extend Device. Each device will have its own methods for reading or executing.
@@ -189,7 +191,11 @@ __ operations __
 
 ## 3. Key Components and Detailed Design
 
-Full of detail codes and describe all the processes.
+### 3.1 Devices' Assignments
+
+### 3.2 Commands' Simple Actions
+
+### 3.3 OS's Execution Process
 
 ## 4. Test Procedure
 
