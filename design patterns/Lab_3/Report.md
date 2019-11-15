@@ -327,8 +327,9 @@ class OS
 
     bool stop_;
 };
-
 ```
+
+As we can see,
 
 ## 4. Test Procedure
 
