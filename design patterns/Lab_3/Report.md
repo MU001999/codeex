@@ -329,7 +329,20 @@ class OS
 };
 ```
 
-As we can see,
+As we can see, there are four public methods and two private methods, I will introduce them one by one and these member variables will be included.
+
+Actually if we want to let each instance of OS run, we should construct it and then call the method run. Of course commands could be added before or after the call as you like. This is the implementation of method run:
+
+```cpp
+void run()
+{
+    stop_ = false;
+    std::thread tForExecReadOps([this]{ this->executeReadCommands(); });
+    std::thread tForExecWriteOps([this]{ this->executeWriteCommands(); });
+    tForExecReadOps.detach();
+    tForExecWriteOps.detach();
+}
+```
 
 ## 4. Test Procedure
 
