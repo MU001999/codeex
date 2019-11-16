@@ -458,6 +458,8 @@ int main(int argc, char *argv[])
 
 At first, I declare the divices and corresponding commands for the divices. And these commands will be added randomly to the os, then the main thread will sleep for 1s. The os will stop finally.
 
+You may feel confused about statement `Command::sleepRandom();`, it will action as its name to sleep for a random time between 0ms ~ 1ms simply.
+
 ### 4.2 Example Result
 
 I run this test and get an example result of it as the following:
