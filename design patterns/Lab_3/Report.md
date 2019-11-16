@@ -407,12 +407,74 @@ void addReadCommand(std::shared_ptr<ReadCommand> command)
 }
 ```
 
-This method is simple, it will check whether the queue is empty or not. It will push the given command to readCommands_ and then notify the blocked thread to continue to run if the queue is empty. Or it will just push the given command to readCommands_ if the queue is not empty.
+This method is simple, it will check whether the queue is empty or not. It will push the given command to readCommands_ and then [notify](https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one) the blocked thread to continue to run if the queue is empty. Or it will just push the given command to readCommands_ if the queue is not empty.
 
 ## 4. Test Procedure
 
-Describe the procedure of testing with the example result.
+### 4.1 Test Code
+
+I designed a simple test for this lab as the following code:
+
+```cpp
+int main(int argc, char *argv[])
+{
+    OS os; os.run();
+
+    auto internetCard = make_shared<InternetCard>("icard");
+    auto ram = make_shared<Ram>("ram");
+    auto soundCard = make_shared<SoundCard>("scard");
+
+    vector<shared_ptr<ReadCommand>> readCommands
+    {
+        make_shared<InternetCardReadCommand>(internetCard),
+        make_shared<RamReadCommand>(ram),
+        make_shared<SoundCardReadCommand>(soundCard)
+    };
+
+    vector<shared_ptr<WriteCommand>> writeCommands
+    {
+        make_shared<InternetCardWriteCommand>(internetCard),
+        make_shared<RamWriteCommand>(ram),
+        make_shared<SoundCardWriteCommand>(soundCard)
+    };
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> disInt(0, 2);
+    for (int i = 0; i < 5; ++i)
+    {
+        Command::sleepRandom();
+        os.addReadCommand(readCommands[disInt(gen)]);
+        Command::sleepRandom();
+        os.addWriteCommand(writeCommands[disInt(gen)]);
+    }
+
+    this_thread::sleep_for(1s);
+    os.stop();
+
+    return 0;
+}
+```
+
+At first, I declare the divices and corresponding commands for the divices. And these commands will be added randomly to the os, then the main thread will sleep for 1s. The os will stop finally.
+
+### 4.2 Example Result
+
+I run this test and get an example result of it as the following:
+
+```plaintext
+ram is reading...
+ram is writing...
+ram is reading...
+icard is receiving...
+icard is sending...
+ram is writing...
+icard is sending...
+icard is receiving...
+scard is playing...
+icard is receiving...
+```
 
 ## 5. Conclusion
 
-Conclude the conclusion.
+It's an interesting assignment for me. In this lab, I learned the command pattern and try to use it. And I also acquired a better understanding of multi-threads.
