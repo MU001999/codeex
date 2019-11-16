@@ -222,9 +222,7 @@ private:
 
 Let's look at the InternetCard's implementation above. The constructor is easy to understand. In these two methods, I make locks to make sure the two will block themselves when the other is executing. But some read operations can execute together at the same time.
 
-I locks the shared mutex in shared mode at first in method sendIn and locks the shared mutex in exclusive mode at the beginning of method recvFrom in order to make sure things will be done as mentioned in the previous paragraph.
-
-Something about the shared_lock and unique_lock you can look for more at [shared_lock](https://en.cppreference.com/w/cpp/thread/shared_lock) and [unique_lock](https://en.cppreference.com/w/cpp/thread/unique_lock).
+I [locks the shared mutex in shared mode](https://en.cppreference.com/w/cpp/thread/shared_lock) at first in method sendIn and [locks the shared mutex in exclusive mode](https://en.cppreference.com/w/cpp/thread/unique_lock) at the beginning of method recvFrom in order to make sure things will be done as mentioned in the previous paragraph.
 
 ### 3.2 Commands' Simple Actions
 
@@ -331,7 +329,7 @@ class OS
 
 As we can see, there are four public methods and two private methods, I will introduce them one by one and these member variables will be included.
 
-Actually if we want to let each instance of OS run, we should construct it and then call the method run. Of course commands could be added before or after the call as you like. This is the implementation of method run:
+Actually if we want to let an instance of OS run, we should construct it and then call the method run. Of course commands could be added before or after the call as you like. This is the implementation of method run:
 
 ```cpp
 void run()
@@ -343,6 +341,19 @@ void run()
     tForExecWriteOps.detach();
 }
 ```
+
+In fact method run may be called after being stoped, so it will set stop_ to false to make sure the threads will run as expected. Then there will be two [threads](https://en.cppreference.com/w/cpp/thread/thread), one for read commands and another one for write commands, received real functions for exeucting commands. The two threads will be detached from the main thread after constructions.
+
+Maybe the OS will be shutdown with the time, we need to stop it at the time. So it's time to show method stop:
+
+```cpp
+void stop()
+{
+    stop_ = true;
+}
+```
+
+It's very simple and easy to understand, the method will set stop_ to true. Then progress in threads, method run started, will stop and return because the change of stop_.
 
 ## 4. Test Procedure
 
