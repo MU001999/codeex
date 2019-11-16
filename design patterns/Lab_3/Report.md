@@ -353,7 +353,61 @@ void stop()
 }
 ```
 
-It's very simple and easy to understand, the method will set stop_ to true. Then progress in threads, method run started, will stop and return because the change of stop_.
+It's very simple and easy to understand, the method will just set stop_ to true. Then progress in threads, started in method run, will stop and return because the change of stop_ from true to false.
+
+Then I will introduce the two private methods firstly, these methods are designed for threads to run. And I will only show the implementation of method executeReadCommands, another one is like it with difference at the involved member variables.
+
+```cpp
+void executeReadCommands()
+{
+    while (true)
+    {
+        if (stop_)
+        {
+            break;
+        }
+        if (readCommands_.empty())
+        {
+            using namespace std::literals::chrono_literals;
+            std::unique_lock lock(mutexForROps_);
+            // https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for
+            cvForROps_.wait_for(lock, 20ms, [this] { return !this->readCommands_.empty(); });
+        }
+        // else if queue if not empty
+        else
+        {
+            auto command = readCommands_.front();
+            readCommands_.pop();
+            command->execute();
+        }
+    }
+}
+```
+
+What in method executeReadCommand is a while-true loop, contains the management for commands. In each loop, variable stop_ will be checked to determine whether to quit or not. It will continue to run if stop_ is false.
+
+Let's go on. If readCommands is empty, it will locks, which is just for the later [wait-for statement](https://en.cppreference.com/w/cpp/thread/condition_variable/wait_for), and block until the queue is not empty or for 20ms.
+
+Else if the queue if not empty, it will just get and pop the front element of the queue and then execute the command got.
+
+Finally only method addReadCommand and addWriteCommand left, I will introduce the implementation of addReadCommand ad the following:
+
+```cpp
+void addReadCommand(std::shared_ptr<ReadCommand> command)
+{
+    if (readCommands_.empty())
+    {
+        readCommands_.push(command);
+        cvForROps_.notify_one();
+    }
+    else
+    {
+        readCommands_.push(command);
+    }
+}
+```
+
+This method is simple, it will check whether the queue is empty or not. It will push the given command to readCommands_ and then notify the blocked thread to continue to run if the queue is empty. Or it will just push the given command to readCommands_ if the queue is not empty.
 
 ## 4. Test Procedure
 
