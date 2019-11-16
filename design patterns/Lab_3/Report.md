@@ -2,6 +2,8 @@
 
 > This is the report for case 1
 
+Author: Xu Bo
+
 ## 1. Analysis of Lab Task
 
 In lab 3, the task is that there some I/O devices, which support read and write operations, and one OS to employ queues to manage all the read-write requets.
