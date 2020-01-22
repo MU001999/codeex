@@ -1,4 +1,4 @@
-# codeex
+# CodeEx
 Record the interesting programming exercises encountered.
 
 ## INTERESTING PROBLEMS
