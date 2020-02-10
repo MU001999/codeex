@@ -80,3 +80,4 @@
 * [Guess Number Higher or Lower](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Guess%20Number%20Higher%20or%20Lower.cpp)
 * [Valid Perfect Square](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Valid%20Perfect%20Square.cpp)
 * [Number of Lines To Write String](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Number%20of%20Lines%20To%20Write%20String.cpp)
+* [Exclusive Time of Functions](https://github.com/MU001999/codeex/blob/master/leetcode-cn/cpp/Exclusive%20Time%20of%20Functions.cpp)
