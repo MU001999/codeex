@@ -1,4 +1,5 @@
 #include <set>
+#include <map>
 #include <queue>
 #include <tuple>
 #include <array>
@@ -13,18 +14,15 @@
 #include <iostream>
 #include <functional>
 
-
 inline void exit_with_msg(const std::string &msg)
 {
     std::cout << msg << std::endl;
     exit(0);
 }
 
-
 constexpr auto N = 18, K = 3, ScoreN = 3;
 constexpr double ALPHA = 1.5;
 const std::set<int> filter {0, 2, 9, 14, 17};
-
 
 struct Method
 {
@@ -32,31 +30,33 @@ struct Method
     std::vector<int> method;
 };
 
-
 double computeGradeByGroup(const std::bitset<N>&, double res = 0);
 int    computeScoreByGroup(const std::bitset<N>&); // for favorability
 
-
+std::map<std::string, std::string>          names;
 std::vector<std::pair<double, std::string>> rawInfo;
 std::array<std::array<int, N>, N>           scores;
 std::vector<std::bitset<N>>                 posG;
 std::vector<int>                            scoreG;
 std::vector<std::vector<int>>               noInterference;
 
-
 bool cmp(const Method&, const Method&);
 std::priority_queue<Method, std::vector<Method>, decltype(cmp)*> Result(cmp);
-
 
 void genRawInfoAndScores()
 {
     std::ifstream score_in("score.txt");
     if (!score_in) exit_with_msg("no such file: score.txt");
+    std::ifstream name_in("name.txt");
+    if (!name_in) exit_with_msg("no such file: name.txt");
 
     for (int _i = 0, i = -1, tmpscores[ScoreN]; _i < N + filter.size(); ++_i)
     {
         std::string No; score_in >> No;
         for (auto &score : tmpscores) score_in >> score;
+
+        std::string name; name_in >> name >> name;
+        names[No] = name;
 
         if (filter.count(_i)) continue; else ++i;
 
@@ -75,7 +75,6 @@ void genRawInfoAndScores()
 
     if (N != rawInfo.size()) exit_with_msg("The number of students entered should be " + std::to_string(N) + " or edit N in code");
 }
-
 
 void computePosG()
 {
@@ -104,7 +103,6 @@ void computePosG()
     add2posG(-1, K, 0);
 }
 
-
 void computeNoInterference()
 {
     for (auto i = 0; i < (int)posG.size(); ++i)
@@ -114,13 +112,11 @@ void computeNoInterference()
     }
 }
 
-
 int computeScore(const std::vector<int> &method, int sum = 0)
 {
     for (auto i: method) sum += scoreG[i];
     return sum;
 }
-
 
 int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> method)
 {
@@ -143,24 +139,28 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
     return 1;
 }
 
-
 void print()
 {
     std::cout << "## RESULT ##" << std::endl;
     for (int _ = 0; _ < 10 && !Result.empty(); ++_)
     {
         auto top = Result.top(); Result.pop();
-        printf("%3d | ", top.score);
+        printf("\n当前总分组得分: %3d\n", top.score);
         for (auto i : top.method)
         {
-            printf("[ %6.2lf ", computeGradeByGroup(posG[i]));
-            for (int j = 0; j < N; ++j) if (posG[i][j]) printf("%2s ", rawInfo[j].second.c_str());
-            printf("]");
+            printf("  小组成绩得分: %6.2lf, 组员: ", computeGradeByGroup(posG[i]));
+            for (int j = 0; j < N; ++j)
+            {
+                if (posG[i][j])
+                {
+                    printf("%s ", names[rawInfo[j].second].c_str());
+                }
+            }
+            printf("\n");
         }
         std::cout << std::endl;
     }
 }
-
 
 int main()
 {
@@ -181,19 +181,16 @@ int main()
     return 0;
 }
 
-
 bool cmp(const Method &a, const Method &b)
 {
     return a.score < b.score;
 }
-
 
 double computeGradeByGroup(const std::bitset<N> &group, double res)
 {
     for (int i = 0; i < N; ++i) if (group[i]) res += rawInfo[i].first;
     return res;
 }
-
 
 int computeScoreByGroup(const std::bitset<N> &group)
 {
