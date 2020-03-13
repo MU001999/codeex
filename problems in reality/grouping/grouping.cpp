@@ -123,6 +123,10 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
     if (posCurrent.all())
     {
         Result.push({ computeScore(method), method });
+        if (Result.size() > 10)
+        {
+            Result.pop();
+        }
         return 0;
     }
     else if (count == 0) return 1;
@@ -183,7 +187,7 @@ int main()
 
 bool cmp(const Method &a, const Method &b)
 {
-    return a.score < b.score;
+    return a.score > b.score;
 }
 
 double computeGradeByGroup(const std::bitset<N> &group, double res)
