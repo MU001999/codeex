@@ -14,7 +14,6 @@ def gen_name():
 
 if __name__ == "__main__":
     if not os.path.exists("./test"):
-        os.rmdir("./test")
         os.mkdir("./test")
     with open("./test/score.txt", "w") as f:
         for i in range(1, 24):
