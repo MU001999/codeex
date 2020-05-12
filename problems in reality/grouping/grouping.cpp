@@ -146,10 +146,19 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
 void print()
 {
     std::cout << "## RESULT ##" << std::endl;
-    for (int _ = 0; _ < 10 && !Result.empty(); ++_)
+
+    std::vector<decltype(Result)::value_type> results;
+    while (!Result.empty())
     {
-        auto top = Result.top(); Result.pop();
-        printf("\n当前总分组得分: %3d\n", top.score);
+        results.push_back(Result.top());
+        Result.pop();
+    }
+    std::reverse(results.begin(), results.end());
+
+    for (int ind = 0; ind < results.size(); ++ind)
+    {
+        auto &top = results[ind];
+        printf("\n %c 总分组评分: %3d\n", 'A' + ind, top.score);
         for (auto i : top.method)
         {
             printf("  小组成绩得分: %6.2lf, 组员: ", computeGradeByGroup(posG[i]));
