@@ -6,20 +6,39 @@ Q-URL: https://leetcode-cn.com/problems/find-common-characters/
 class Solution {
 public:
     vector<string> commonChars(vector<string>& A) {
-        vector<string> rest;
-        map<char, int> cnts;
-        
-        for (auto c: A.front()) ++cnts[c];
-        
-        for (auto &s: A)
+        if (A.empty())
         {
-            decltype(cnts) tmp;
-            for (auto c: s) ++tmp[c];
-            for (auto &cnt: cnts) cnt.second = min(tmp[cnt.first], cnt.second);
+            return {};
         }
-        
-        for (auto cnt: cnts) while (cnt.second--) rest.push_back(string() + cnt.first);
-        
-        return rest;
+
+        int counts[26] = {0};
+        for (auto chr : A[0])
+        {
+            ++counts[chr - 'a'];
+        }
+        for (size_t i = 1; i < A.size(); ++i)
+        {
+            int tmp_counts[26] = {0};
+            for (auto chr : A[i])
+            {
+                ++tmp_counts[chr - 'a'];
+            }
+
+            for (int i = 0; i < 26; ++i)
+            {
+                counts[i] = min(counts[i], tmp_counts[i]);
+            }
+        }
+
+        vector<string> result;
+        for (char chr = 'a'; chr <= 'z'; ++chr)
+        {
+            for (int i = 0; i < counts[chr - 'a']; ++i)
+            {
+                result.emplace_back(1, chr);
+            }
+        }
+
+        return result;
     }
 };
