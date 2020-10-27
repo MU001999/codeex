@@ -9,10 +9,15 @@
 生成请求时以下信息必填：
 
 Country Name (2 letter code) [XX]:CN
+
 State or Province Name (full name) []:BeiJing
+
 Locality Name (eg, city) [Default City]:BeiJing
+
 Organization Name (eg, company) [Default Company Ltd]:Jusot
+
 Common Name (eg, your name or your server's hostname) []: *.myhost.com
+
 Email Address []:xxx@myhost.com
 
 #### 搭建 CA
