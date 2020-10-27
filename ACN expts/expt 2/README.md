@@ -75,3 +75,9 @@ app.run(host = '0.0.0.0', port = 5000, ssl_context = ('/path/to/server.crt', '/p
 ### 通过 HTTPS 访问该 Web 服务器（截图）
 
 ![](screenshots/4.jpg)
+
+### 通过 WireShark 软件，截取访问过程（截图），建立 SSL/TLS 连接的过程，并且分析其中的步骤
+
+![](screenshots/5.jpg)
+![](screenshots/6.jpg)
+![](screenshots/7.jpg)
