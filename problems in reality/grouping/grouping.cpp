@@ -46,44 +46,95 @@ std::priority_queue<Method, std::vector<Method>, decltype(cmp)*> Result(cmp);
 void genRawInfoAndScores()
 {
     std::ifstream score_in("score.txt");
-    if (!score_in) exit_with_msg("no such file: score.txt");
+    if (!score_in)
+    {
+        exit_with_msg("no such file: score.txt");
+    }
+
     std::ifstream name_in("name.txt");
-    if (!name_in) exit_with_msg("no such file: name.txt");
+    if (!name_in)
+    {
+        exit_with_msg("no such file: name.txt");
+    }
 
     for (int _i = 0, i = -1, tmpscores[ScoreN]; _i < N + filter.size(); ++_i)
     {
-        std::string No; score_in >> No;
-        for (auto &score : tmpscores) score_in >> score;
+        std::string No;
+        score_in >> No;
 
-        std::string name; name_in >> name >> name;
+        if (No != std::to_string(_i + 1))
+        {
+            exit_with_msg("err for the No " + std::to_string(_i + 1) + " in file score.txt");
+        }
+
+        for (auto &score : tmpscores)
+        {
+            score_in >> score;
+        }
+
+        std::string name;
+        name_in >> name >> name;
         names[No] = name;
 
-        if (filter.count(_i)) continue; else ++i;
+        if (filter.count(_i))
+        {
+            continue;
+        }
+        else
+        {
+            ++i;
+        }
 
         rawInfo.emplace_back(std::make_pair(std::accumulate(std::begin(tmpscores), std::end(tmpscores), 0) / (double)ScoreN, No));
 
         std::ifstream fin("prefer_" + No + ".txt");
-        if (!fin) exit_with_msg("no such file: prefer_" + No + ".txt");
+        if (!fin)
+        {
+            exit_with_msg("no such file: prefer_" + No + ".txt");
+        }
 
         for (int _j = 0, j = -1, score; _j < N + filter.size(); ++_j)
         {
             fin >> No >> score;
-            if (filter.count(_j)) continue; else ++j;
+
+            if (No != std::to_string(_j + 1))
+            {
+                exit_with_msg("err for the No " + std::to_string(_j + 1) + " in file prefer_" + std::to_string(_i + 1) + ".txt");
+            }
+
+            if (filter.count(_j))
+            {
+                continue;
+            }
+            else
+            {
+                ++j;
+            }
+
             scores[i][j] = score;
         }
     }
 
-    if (N != rawInfo.size()) exit_with_msg("The number of students entered should be " + std::to_string(N) + " or edit N in code");
+    if (N != rawInfo.size())
+    {
+        exit_with_msg("The number of students entered should be " + std::to_string(N) + " or edit N in code");
+    }
 }
 
 void computePosG()
 {
     std::vector<int> grades;
-    for (auto info : rawInfo) grades.push_back(info.first);
+    for (auto info : rawInfo)
+    {
+        grades.push_back(info.first);
+    }
 
     float average = std::accumulate(grades.begin(), grades.end(), 0) / (float)N * K;
 
-    auto legal = [=](const int &score) { return (average - ALPHA <= score) && (score <= average + ALPHA); };
+    auto legal = [=](const int &score)
+    { 
+        return (average - ALPHA <= score) && (score <= average + ALPHA); 
+    };
 
     std::function<void(int, int, std::bitset<N>)> add2posG = [&](int i, int k, std::bitset<N> pos)
     {
@@ -108,13 +159,22 @@ void computeNoInterference()
     for (auto i = 0; i < (int)posG.size(); ++i)
     {
         noInterference.push_back({});
-        for (auto j = i + 1; j < (int)posG.size(); ++j) if ((posG[i] & posG[j]).none()) noInterference[i].push_back(j);
+        for (auto j = i + 1; j < (int)posG.size(); ++j)
+        {
+            if ((posG[i] & posG[j]).none())
+            {
+                noInterference[i].push_back(j);
+            }
+        }
     }
 }
 
 int computeScore(const std::vector<int> &method, int sum = 0)
 {
-    for (auto i: method) sum += scoreG[i];
+    for (auto i: method)
+    {
+        sum += scoreG[i];
+    }
     return sum;
 }
 
@@ -129,7 +189,10 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
         }
         return 0;
     }
-    else if (count == 0) return 1;
+    else if (count == 0)
+    {
+        return 1;
+    }
 
     for (auto it = noInterference[m].begin(); it != noInterference[m].end(); ++it)
     {
@@ -201,7 +264,13 @@ bool cmp(const Method &a, const Method &b)
 
 double computeGradeByGroup(const std::bitset<N> &group, double res)
 {
-    for (int i = 0; i < N; ++i) if (group[i]) res += rawInfo[i].first;
+    for (int i = 0; i < N; ++i)
+    {
+        if (group[i])
+        {
+            res += rawInfo[i].first;
+        }
+    }
     return res;
 }
 
@@ -210,14 +279,26 @@ int computeScoreByGroup(const std::bitset<N> &group)
     std::function<int(int)> cntScore = [&](int i)
     {
         auto j = i, res = 0;
-
         while (++j < N && !group[j]);
-        if (j < N) res += scores[i][j] + scores[j][i] + cntScore(j);
-        while (++j < N) if (group[j]) res += scores[i][j] + scores[j][i];
+
+        if (j < N)
+        {
+            res += scores[i][j] + scores[j][i] + cntScore(j);
+        }
+
+        while (++j < N)
+        {
+            if (group[j])
+            {
+                res += scores[i][j] + scores[j][i];
+            }
+        }
 
         return res;
     };
 
-    int i = -1; while (++i < N && !group[i]);
+    int i = -1;
+    while (++i < N && !group[i]);
+
     return cntScore(i);
 }
