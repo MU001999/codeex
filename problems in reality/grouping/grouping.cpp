@@ -43,6 +43,8 @@ std::vector<std::vector<int>>               noInterference;
 bool cmp(const Method&, const Method&);
 std::priority_queue<Method, std::vector<Method>, decltype(cmp)*> Result(cmp);
 
+void print(std::ostream &out);
+
 void genRawInfoAndScores()
 {
     std::ifstream score_in("score.txt");
@@ -187,6 +189,14 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
         {
             Result.pop();
         }
+
+        std::ofstream fout("./temp_result.txt", std::ios::out);
+        if (!fout.good()) {
+            std::cout << "err when opening temp_result.txt" << std::endl;
+            exit(0);
+        }
+        print(fout);
+
         return 0;
     }
     else if (count == 0)
@@ -206,35 +216,37 @@ int traverse(int m, int count, std::bitset<N> posCurrent, std::vector<int> metho
     return 1;
 }
 
-void print()
+void print(std::ostream &out)
 {
-    std::cout << "## RESULT ##" << std::endl;
+    out << "## RESULT ##" << std::endl;
 
-    std::vector<decltype(Result)::value_type> results;
-    while (!Result.empty())
+    auto tempResult = Result;
+
+    std::vector<decltype(tempResult)::value_type> results;
+    while (!tempResult.empty())
     {
-        results.push_back(Result.top());
-        Result.pop();
+        results.push_back(tempResult.top());
+        tempResult.pop();
     }
     std::reverse(results.begin(), results.end());
 
     for (int ind = 0; ind < results.size(); ++ind)
     {
         auto &top = results[ind];
-        printf("\n %c 总分组评分: %3d\n", 'A' + ind, top.score);
+        out << "\n " << char('A' + ind) << " 总分组评分: " << top.score << std::endl;
         for (auto i : top.method)
         {
-            printf("  小组成绩得分: %6.2lf, 组员: ", computeGradeByGroup(posG[i]));
+            out << "  小组成绩得分: " << computeGradeByGroup(posG[i]) << "，组员：";
             for (int j = 0; j < N; ++j)
             {
                 if (posG[i][j])
                 {
-                    printf("%s ", names[rawInfo[j].second].c_str());
+                    out << names[rawInfo[j].second] << ' ';
                 }
             }
-            printf("\n");
+            out << std::endl;
         }
-        std::cout << std::endl;
+        out << std::endl;
     }
 }
 
@@ -252,7 +264,7 @@ int main()
         traverse(m, N / K - 1, posG[m], method);
     }
 
-    print();
+    print(std::cout);
 
     return 0;
 }
